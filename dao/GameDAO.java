@@ -5,17 +5,6 @@ import java.sql.*;
 import java.util.*;
 
 public class GameDAO {
-    private static final String URL = "jdbc:mysql://52.65.232.17:3306/SteamDB";
-    private static final String USER = "HamYiHyeon";
-    private static final String PASSWORD = "116512eh";
-
-    static {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // 드라이버 로딩
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static List<Game> getPopularGames() {
         return getGames("SELECT * FROM games ORDER BY popularity DESC LIMIT 6");
@@ -148,7 +137,7 @@ public class GameDAO {
 
     public static List<Post> getAllPosts() {
         List<Post> posts = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(...);
+        try (Connection conn = DBUtil.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM posts ORDER BY created_at DESC")) {
 
