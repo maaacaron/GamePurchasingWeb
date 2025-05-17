@@ -5,9 +5,9 @@ import java.sql.*;
 import java.util.*;
 
 public class GameDAO {
-    private static final String URL = "jdbc:mysql://localhost:3306/gamemart?useSSL=false&serverTimezone=UTC";
-    private static final String USER = "root";
-    private static final String PASSWORD = "1234";
+    private static final String URL = "jdbc:mysql://52.65.232.17:3306/SteamDB";
+    private static final String USER = "HamYiHyeon";
+    private static final String PASSWORD = "116512eh";
 
     static {
         try {
