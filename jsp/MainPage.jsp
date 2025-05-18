@@ -33,8 +33,8 @@
       card.href="Game_Detail.jsp?id=<%= id %>";
       card.className = 'game-card';
       card.innerHTML = `
-        <img src = "${image}" alt="${name}">
-        <p>${name}</p>
+        <img src = "<%=image%>" alt="<%=name%>">
+        <p><%=name%></p>
       `;
         grid.appendChild(card);
     <%
