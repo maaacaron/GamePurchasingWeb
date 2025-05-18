@@ -15,8 +15,8 @@
         Statement stmt = conn.createStatement();
 
         // 아이디 중복 체크
-        ResultSet idRs = stmt.executeQuery("SELECT ID FROM User WHERE UserID = '" + userId + "'");
-        if (idRs.next() === userId) {
+        ResultSet idRs = stmt.executeQuery("SELECT ID FROM User WHERE LOWER(UserID) = LOWER('" + userId + "')");
+        if (idRs.next()) {
             isDuplicate = true;
 %>
             <script>
