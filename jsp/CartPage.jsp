@@ -1,5 +1,5 @@
-<%@ page import="java.sql.*" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
+<% request.setCharacterEncoding("UTF-8");%>
 <%@ include file="SQLcontants.jsp" %>
 <!DOCTYPE html>
 <html>
