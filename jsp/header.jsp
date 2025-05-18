@@ -1,12 +1,3 @@
-<%@ page contentType="text/html;charset=utf8" pageEncoding="utf8" %>
-<% request.setCharacterEncoding("UTF-8");%>
-
-<%
-  String currentUser = (String) session.getAttribute("currentUser");
-%>
-<head>
-  <link rel="stylesheet" href="css/common.css">
-</head>
 <header class="site-header">
   <div class="logo">
     <a href="MainPage.jsp">GameMart</a>
