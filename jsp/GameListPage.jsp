@@ -1,18 +1,18 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ page import="java.util.*, model.Game, dao.GameDAO" %>
 <%
-  request.setCharacterEncoding("UTF-8");
+    request.setCharacterEncoding("UTF-8");
 
-  String genre = request.getParameter("genre");
-  String discount = request.getParameter("discount");
-  String minStr = request.getParameter("minPrice");
-  String maxStr = request.getParameter("maxPrice");
+    String genre = request.getParameter("genre");
+    String discount = request.getParameter("discount");
+    String minStr = request.getParameter("minPrice");
+    String maxStr = request.getParameter("maxPrice");
 
-  int minPrice = (minStr != null && !minStr.isEmpty()) ? Integer.parseInt(minStr) : 0;
-  int maxPrice = (maxStr != null && !maxStr.isEmpty()) ? Integer.parseInt(maxStr) : 999999;
+    int minPrice = (minStr != null && !minStr.isEmpty()) ? Integer.parseInt(minStr) : 0;
+    int maxPrice = (maxStr != null && !maxStr.isEmpty()) ? Integer.parseInt(maxStr) : 999999;
 
-  List<Game> games = GameDAO.filterGames(genre, discount, minPrice, maxPrice);
-  List<String> genreList = GameDAO.getAllGenres();
+    List<Game> games = GameDAO.filterGames(genre, discount, minPrice, maxPrice);
+    List<String> genreList = GameDAO.getAllGenres();
 %>
 <!DOCTYPE html>
 <html>
@@ -25,7 +25,7 @@
   <%@ include file="header.jsp" %>
 
   <main style="display: flex; padding: 20px;">
-    <!-- 왼쪽 필터 영역 -->
+    <!-- 왼쪽 필터 영역-->
     <aside class="sidebar">
       <h3>필터</h3>
       <form method="get" action="GameListPage.jsp">
@@ -57,7 +57,7 @@
       </form>
     </aside>
 
-    <!-- 게임 목록 -->
+    <!--게임 목록-->
     <section class="game-content">
       <h2><%= (genre != null && !genre.isEmpty()) ? "장르: " + genre : "전체 게임 목록" %></h2>
       <div class="game-grid">
@@ -71,7 +71,7 @@
         %>
           <a href="Game_Detail.jsp?id=<%= game.getId() %>" class="game-card">
             <img src="<%= game.getImage() %>" alt="<%= game.getName() %>">
-            <p><%= game.getName() %></p>
+            <p><%= game.getName() %> (<%= game.getGenre() %>)</p>
           </a>
         <%
             }

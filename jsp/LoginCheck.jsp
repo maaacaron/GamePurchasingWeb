@@ -1,20 +1,29 @@
-<%@ page import="dao.GameDAO" %>
+<%@ page import="dao.UserDAO, model.User" %>
 <%
-  request.setCharacterEncoding("UTF-8");
-  String username = request.getParameter("username");
-  String password = request.getParameter("password");
+    request.setCharacterEncoding("UTF-8");
 
-  boolean isValid = GameDAO.checkLogin(username, password);
+    String userId = request.getParameter("userId");
+    String password = request.getParameter("password");
 
-  if (isValid) {
-    session.setAttribute("currentUser", username);
-    response.sendRedirect("MainPage.jsp");
-  } else {
+    User user = UserDAO.checkLogin(userId, password);
+
+    if (user != null) {
+        // 세션에 유저 정보 저장
+        session.setAttribute("userId", user.getId());
+        session.setAttribute("userName", user.getName());
+        session.setAttribute("isAdmin", user.isAdmin());
 %>
-    <script>
-      alert("아이디 또는 비밀번호가 틀렸습니다.");
-      history.back();
-    </script>
+        <script>
+            alert("로그인 성공!");
+            location.href = "MainPage.jsp";
+        </script>
 <%
-  }
+    } else {
+%>
+        <script>
+            alert("아이디 또는 비밀번호가 잘못되었습니다.");
+            history.back();
+        </script>
+<%
+    }
 %>

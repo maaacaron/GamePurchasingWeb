@@ -1,8 +1,9 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ page import="dao.CartDAO" %>
 <%
-  String currentUser = (String) session.getAttribute("currentUser");
-  if (currentUser == null) {
+  Integer userId = (Integer) session.getAttribute("userId");
+  String gameIdStr = request.getParameter("gameId");
+
+  if (userId == null) {
 %>
   <script>
     alert("로그인이 필요합니다.");
@@ -12,10 +13,9 @@
     return;
   }
 
-  String gameId = request.getParameter("gameId");
-
-  if (gameId != null && !gameId.isEmpty()) {
-    CartDAO.addToCart(currentUser, gameId);
+  if (gameIdStr != null && !gameIdStr.isEmpty()) {
+    int gameId = Integer.parseInt(gameIdStr);
+    CartDAO.addToCart(userId, gameId);
   }
 
   response.sendRedirect("CartPage.jsp");

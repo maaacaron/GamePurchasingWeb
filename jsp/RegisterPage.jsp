@@ -14,10 +14,10 @@
       <h2>회원가입</h2>
       <form method="post" action="RegisterCheck.jsp">
         <div class="login-ID">
-          <input type="text" name="username" placeholder="ID 입력" required />
+          <input type="text" name="userID" placeholder="ID 입력" required />
         </div>
         <div class="login-PW">
-          <input type="password" name="password" placeholder="비밀번호 입력" required />
+          <input type="password" name="PassWord" placeholder="비밀번호 입력" required />
         </div>
         <button type="submit">가입하기</button>
       </form>

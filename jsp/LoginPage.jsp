@@ -13,7 +13,7 @@
     <div class="login-box">
       <form method="post" action="LoginCheck.jsp">
         <div class="login-ID">
-          <input type="text" name="username" placeholder="ID 입력" required />
+          <input type="text" name="userId" placeholder="ID 입력" required />
         </div>
         <div class="login-PW">
           <input type="password" name="password" placeholder="비밀번호 입력" required />
