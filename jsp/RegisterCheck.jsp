@@ -16,7 +16,7 @@
 
         // 아이디 중복 체크
         ResultSet idRs = stmt.executeQuery("SELECT ID FROM User WHERE UserID = '" + userId + "'");
-        if (idRs.next()) {
+        if (idRs.next() == userId) {
             isDuplicate = true;
 %>
             <script>
