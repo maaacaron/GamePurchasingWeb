@@ -1,3 +1,6 @@
+<%
+  String currentUser = (String) session.getAttribute("currentUser");
+%>
 <header class="site-header">
   <div class="logo">
     <a href="MainPage.jsp">GameMart</a>
