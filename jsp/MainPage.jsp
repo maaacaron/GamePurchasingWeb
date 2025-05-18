@@ -5,7 +5,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css">
+  <link rel="stylesheet" href="var/lib/tomcat10/webapps/ROOT/Web-DB/GamePurchasingWeb/css/common.css">
 </head>
 <body>
 
