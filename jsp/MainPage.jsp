@@ -1,32 +1,47 @@
+<%@ page import="java.sql.*" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, model.Game, dao.GameDAO" %>
+<%@ include file="SQLconstants.jsp" %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="common.css">
-    </head>
-    <body>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/common.css">
+</head>
+<body>
 
-    <!-- 원래 있었던 위쪽 script부분 header에 넣고 include로 통합-->
-    <%@ include file="header.jsp" %>
+<%@ include file="header.jsp" %>
 
-    <main>
-        <div class="main-banner">인기 게임</div>
-        <div class="game-grid">
-            <%
-                List<Game> games = GameDAO.getPopularGames();
-                for (Game game : games) {
-            %>
-                <a href="Game_Detail.jsp?id=<%= game.getId() %>" class="game-card">
-                  <img src="<%= game.getImage() %>" alt="<%= game.getName() %>">
-                  <p><%= game.getName() %></p>
-                </a>
-            <%
-                }
-            %>
-        </div>
-    </main>
+<main>
+  <div class="main-banner">인기 게임</div>
+  <div class="game-grid">
+    <%
+      try {
+          Class.forName(jdbc_driver);
+          Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
+          Statement stmt = conn.createStatement();
+          ResultSet rs = stmt.executeQuery("SELECT ID, Name, Image FROM Game ORDER BY ID DESC LIMIT 6");
 
-    </body>
+          while (rs.next()) {
+              int id = rs.getInt("ID");
+              String name = rs.getString("Name");
+              String image = rs.getString("Image");
+    %>
+        <a href="Game_Detail.jsp?id=<%= id %>" class="game-card">
+          <img src="<%= image %>" alt="<%= name %>">
+          <p><%= name %></p>
+        </a>
+    <%
+          }
+
+          rs.close();
+          stmt.close();
+          conn.close();
+      } catch (Exception e) {
+          out.println("<p style='color:red;'>DB 오류: " + e.getMessage() + "</p>");
+      }
+    %>
+  </div>
+</main>
+
+</body>
 </html>

@@ -1,50 +1,81 @@
+<%@ page import="java.sql.*" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ page import="java.util.*, model.Game, dao.LibraryDAO" %>
-<%
-    Integer userId = (Integer) session.getAttribute("userId");
-    if (userId == null) {
-%>
-    <script>
-        alert("로그인이 필요합니다.");
-        location.href = "LoginPage.jsp";
-    </script>
-<%
-        return;
-    }
-
-    List<Game> games = LibraryDAO.getLibraryGames(userId);
-%>
+<%@ include file="SQLconstants.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="common.css">
+  <title>내 라이브러리</title>
+  <link rel="stylesheet" href="css/common.css">
 </head>
 <body>
 
-  <%@ include file="header.jsp" %>
+<%@ include file="header.jsp" %>
 
-  <main style="padding: 30px;">
-    <h2>내 게임 라이브러리</h2>
-    <div class="game-grid">
-      <%
-        if (games.isEmpty()) {
-      %>
-        <p>아직 구매한 게임이 없습니다.</p>
-      <%
-        } else {
-          for (Game game : games) {
-      %>
-        <a href="Game_Detail.jsp?id=<%= game.getId() %>" class="game-card">
-          <img src="<%= game.getImage() %>" alt="<%= game.getName() %>">
-          <p><%= game.getName() %> (<%= game.getGenre() %>)</p>
-        </a>
-      <%
-          }
+<main>
+  <h2>내 라이브러리</h2>
+
+  <%
+    String userId = (String) session.getAttribute("currentUser");
+
+    if (userId == null || userId.isEmpty()) {
+        out.println("<p style='color:red;'>로그인이 필요합니다.</p>");
+    } else {
+        try {
+            Class.forName(jdbc_driver);
+            Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
+            Statement stmt = conn.createStatement();
+
+            // 유저 ID → 유저 번호(ID) 조회
+            ResultSet userRs = stmt.executeQuery("SELECT ID FROM User WHERE UserID = '" + userId + "'");
+            if (userRs.next()) {
+                int userDbId = userRs.getInt("ID");
+
+                // 구매 기록 (라이브러리) 조회
+                ResultSet rs = stmt.executeQuery(
+                    "SELECT g.ID, g.Name, g.Image, g.Price " +
+                    "FROM Library l JOIN Game g ON l.Game_ID = g.ID " +
+                    "WHERE l.User_ID = " + userDbId
+                );
+
+                boolean hasGame = false;
+                out.println("<div class='game-grid'>");
+
+                while (rs.next()) {
+                    hasGame = true;
+                    int id = rs.getInt("ID");
+                    String name = rs.getString("Name");
+                    String image = rs.getString("Image");
+                    int price = rs.getInt("Price");
+  %>
+    <a href="Game_Detail.jsp?id=<%= id %>" class="game-card">
+      <img src="<%= image %>" alt="<%= name %>">
+      <p><%= name %></p>
+      <p><%= price %>원</p>
+    </a>
+  <%
+                }
+
+                out.println("</div>");
+
+                if (!hasGame) {
+                    out.println("<p>보유한 게임이 없습니다.</p>");
+                }
+
+                rs.close();
+            } else {
+                out.println("<p>사용자 정보를 찾을 수 없습니다.</p>");
+            }
+
+            userRs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            out.println("<p style='color:red;'>DB 오류: " + e.getMessage() + "</p>");
         }
-      %>
-    </div>
-  </main>
+    }
+  %>
+</main>
 
 </body>
 </html>
