@@ -1,3 +1,6 @@
+<%@ page contentType="text/html;charset=utf8" pageEncoding="utf8" %>
+<% request.setCharacterEncoding("UTF-8");%>
+
 <%
   String currentUser = (String) session.getAttribute("currentUser");
 %>
