@@ -32,7 +32,6 @@ public class GameDAO {
             WHERE ge.Name = ?
         """;
         List<Game> list = new ArrayList<>();
-
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, genreName);
@@ -46,11 +45,10 @@ public class GameDAO {
         return list;
     }
 
-    // 장르 목록
+    // 모든 장르 조회
     public static List<String> getAllGenres() {
         List<String> genres = new ArrayList<>();
         String sql = "SELECT Name FROM Genre ORDER BY Name";
-
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -63,9 +61,8 @@ public class GameDAO {
         return genres;
     }
 
-    // 검색
+    // 키워드 검색
     public static List<Game> searchGames(String keyword) {
-        List<Game> list = new ArrayList<>();
         String sql = """
             SELECT g.*, ge.Name AS GenreName
             FROM Game g
@@ -73,7 +70,7 @@ public class GameDAO {
             LEFT JOIN Genre ge ON gg.GenreID = ge.ID
             WHERE g.Name LIKE ?
         """;
-        
+        List<Game> list = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, "%" + keyword + "%");
@@ -96,7 +93,6 @@ public class GameDAO {
             LEFT JOIN Genre ge ON gg.GenreID = ge.ID
             WHERE g.ID = ?
         """;
-
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -110,7 +106,7 @@ public class GameDAO {
         return null;
     }
 
-    // 필터 검색
+    // 가격/할인/장르 필터
     public static List<Game> filterGames(String genre, String discount, int minPrice, int maxPrice) {
         StringBuilder sql = new StringBuilder("""
             SELECT g.*, ge.Name AS GenreName
@@ -136,7 +132,6 @@ public class GameDAO {
         params.add(maxPrice);
 
         List<Game> list = new ArrayList<>();
-
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
 
@@ -158,7 +153,7 @@ public class GameDAO {
         return list;
     }
 
-    // ResultSet → Game 객체 생성
+    // ResultSet → Game 변환
     private static Game extractGame(ResultSet rs) throws SQLException {
         return new Game(
             rs.getInt("ID"),
@@ -170,11 +165,25 @@ public class GameDAO {
         );
     }
 
-    // 커뮤니티 글 전체
+    // 기본 SELECT용 도우미 메서드
+    private static List<Game> getGames(String sql) {
+        List<Game> list = new ArrayList<>();
+        try (Connection conn = DBUtil.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(extractGame(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // 커뮤니티 글 전체 조회
     public static List<Post> getAllPosts() {
         List<Post> posts = new ArrayList<>();
         String sql = "SELECT * FROM Post ORDER BY ID DESC";
-        
         try (Connection conn = DBUtil.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -182,7 +191,7 @@ public class GameDAO {
                 Post post = new Post();
                 post.setId(rs.getInt("ID"));
                 post.setTitle(rs.getString("Title"));
-                post.setAuthor(rs.getString("User_ID"));  // 추후 join 가능
+                post.setAuthor(rs.getString("User_ID"));
                 post.setCreatedAt(rs.getTimestamp("created_at"));
                 posts.add(post);
             }
