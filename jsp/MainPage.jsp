@@ -5,7 +5,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" type="GamePurchasingWeb/css" href="${pageContext.request.contextPath}/css/common.css">
+  <link rel="stylesheet" href="../css/common.css">
 </head>
 <body>
 
