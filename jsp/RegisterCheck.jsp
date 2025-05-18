@@ -2,8 +2,6 @@
 <% request.setCharacterEncoding("UTF-8");%>
 <%@ include file="SQLcontants.jsp" %>
 <%
-    request.setCharacterEncoding("UTF-8");
-
     String userId = request.getParameter("userId");
     String password = request.getParameter("password");
     String name = request.getParameter("name");

@@ -1,10 +1,8 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
+<% request.setCharacterEncoding("UTF-8");%>
 <%@ include file="SQLcontants.jsp" %>
-<%@ page import="java.sql.*" %>
 
 <%
-    request.setCharacterEncoding("UTF-8");
-
     String userId = request.getParameter("userId");
     String password = request.getParameter("password");
 
