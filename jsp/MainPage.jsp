@@ -6,38 +6,6 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="css/common.css">
-  <style>
-    .game-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-      padding: 20px;
-    }
-    .game-card {
-      display: block;
-      background-color: #111;
-      border-radius: 8px;
-      overflow: hidden;
-      text-align: center;
-      color: white;
-      text-decoration: none;
-    }
-    .game-card img {
-      width: 100%;
-      height: auto;
-    }
-    .game-card p {
-      margin: 10px;
-      font-weight: bold;
-    }
-    .main-banner {
-      font-size: 24px;
-      font-weight: bold;
-      color: white;
-      text-align: center;
-      padding: 20px 0;
-    }
-  </style>
 </head>
 <body>
 
@@ -45,7 +13,7 @@
 
 <main>
   <div class="main-banner">인기 게임</div>
-  <div class="game-grid">
+  <div class="game-grid" id="gameGrid">
     <%
       try {
           Class.forName(jdbc_driver);
