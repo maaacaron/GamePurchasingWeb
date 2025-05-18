@@ -14,8 +14,6 @@
 <main>
   <div class="main-banner">인기 게임</div>
   <div class="game-grid" id="gameGrid"></div>
-  <script>
-    const grid = document.getElementById('gameGrid');
     <%
       try {
           Class.forName(jdbc_driver);
@@ -28,15 +26,10 @@
               String name = rs.getString("Name");
               String image = rs.getString("Image");
     %>
-
-      const card = document.createElement('a');
-      card.href="Game_Detail.jsp?id=<%= id %>";
-      card.className = 'game-card';
-      card.innerHTML = `
-        <img src = "<%= image %>" alt="<%= name %>">
+      <a href="Game_Detail.jsp?id=<%= id %>" class="game-card">
+        <img src="<%= image %>" alt="<%= name %>">
         <p><%= name %></p>
-      `;
-        grid.appendChild(card);
+      </a>
     <%
           }
 
@@ -47,8 +40,6 @@
           out.println("<p style='color:red;'>DB 오류: " + e.getMessage() + "</p>");
       }
     %>
-          
-</script>
 </main>
 
 </body>
