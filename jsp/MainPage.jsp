@@ -1,39 +1,47 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.sql.*" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ include file="SQLcontants.jsp" %>
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
   <meta charset="UTF-8">
-  <!-- 공통 스타일 -->
-  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="css/common.css">
 </head>
 <body>
-  <!-- header.html을 header.jsp로 이름 바꾼 뒤, JSP include 처리 -->
-  <jsp:include page="header.jsp" flush="true" />
 
-  <main>
-    <!-- MainPage.html과 동일한 배너 -->
-    <div class="main-banner">
-      인기 게임?
-    </div>
+<%@ include file="header.jsp" %>
 
-    <!-- 게임 카드 그리드 -->
-    <div class="game-grid" id="gameGrid"></div>
-  </main>
+<main>
+  <div class="main-banner">인기 게임</div>
+  <div class="game-grid">
+    <%
+      try {
+          Class.forName(jdbc_driver);
+          Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
+          Statement stmt = conn.createStatement();
+          ResultSet rs = stmt.executeQuery("SELECT ID, Name, Image FROM Game ORDER BY ID DESC LIMIT 6");
 
-  <!-- 게임 데이터 스크립트 -->
-  <script src="game-data.js"></script>
-  <script>
-    const grid = document.getElementById('gameGrid');
-    games.forEach(game => {
-      const card = document.createElement('a');
-      card.href = game.link;
-      card.className = 'game-card';
-      card.innerHTML = `
-        <img src="${game.image}" alt="${game.name}">
-        <p>${game.name}</p>
-      `;
-      grid.appendChild(card);
-    });
-  </script>
+          while (rs.next()) {
+              int id = rs.getInt("ID");
+              String name = rs.getString("Name");
+              String image = rs.getString("Image");
+    %>
+        <a href="Game_Detail.jsp?id=<%= id %>" class="game-card">
+          <img src="<%= image %>" alt="<%= name %>">
+          <p><%= name %></p>
+        </a>
+    <%
+          }
+
+          rs.close();
+          stmt.close();
+          conn.close();
+      } catch (Exception e) {
+          out.println("<p style='color:red;'>DB 오류: " + e.getMessage() + "</p>");
+      }
+    %>
+  </div>
+</main>
+
 </body>
 </html>
