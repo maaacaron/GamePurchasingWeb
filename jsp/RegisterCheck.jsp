@@ -2,10 +2,10 @@
 <% request.setCharacterEncoding("UTF-8");%>
 <%@ include file="SQLcontants.jsp" %>
 <%
-    String userId = request.getParameter("userId");
-    String password = request.getParameter("password");
+    String userId = request.getParameter("userID");
+    String password = request.getParameter("PassWord");
     String name = request.getParameter("name");
-    String email = request.getParameter("email");
+    String email = request.getParameter("Email");
 
     boolean isDuplicate = false;
 

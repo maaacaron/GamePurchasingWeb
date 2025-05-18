@@ -13,8 +13,8 @@
     <div class="login-box">
       <h2>회원가입</h2>
       <form method="post" action="RegisterCheck.jsp">
-        <div class="login-ID">
-          <input type="name" name="name" placeholder="이름 입력" required />
+        <div class="login-Name">
+          <input type="text" name="name" placeholder="이름 입력" required />
         </div>
         <div class="login-ID">
           <input type="text" name="userID" placeholder="ID 입력" required />
