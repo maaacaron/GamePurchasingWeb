@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <title>내 라이브러리</title>
-  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="../css/common.css">
 </head>
 <body>
 
