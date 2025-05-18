@@ -14,6 +14,26 @@
         Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
         Statement stmt = conn.createStatement();
 
+
+        if(name == null)
+        {
+%>      
+            <script>
+                alert("이름을 입력해주세요.")
+                history.back();
+            </script>
+<%
+        }
+
+        if(userId == null)
+        {
+%>      
+            <script>
+                alert("ID를 입력해주세요.")
+                history.back();
+            </script>
+<%
+        }
         // 아이디 중복 체크
         ResultSet idRs = stmt.executeQuery("SELECT ID FROM User WHERE LOWER(UserID) = LOWER('" + userId + "')");
         if (idRs.next()) {
@@ -27,6 +47,15 @@
         }
         idRs.close();
 
+        if(email == null)
+        {
+%>      
+            <script>
+                alert("이메일을 입력해주세요.")
+                history.back();
+            </script>
+<%
+        }
         if (!isDuplicate) {
             // 이메일 중복 체크
             ResultSet emailRs = stmt.executeQuery("SELECT ID FROM User WHERE Email = '" + email + "'");
@@ -42,6 +71,15 @@
             emailRs.close();
         }
 
+        if(password == null)
+        {
+%>      
+            <script>
+                alert("비밀번호를 입력해주세요.")
+                history.back();
+            </script>
+<%
+        }
         if (!isDuplicate) {
             // INSERT 처리
             int result = stmt.executeUpdate("INSERT INTO User (UserID, PassWord, Name, Email, IsAdmin) " +
