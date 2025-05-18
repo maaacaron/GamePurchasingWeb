@@ -5,6 +5,13 @@ body {
   color: #ffffff;
 }
 
+main {
+  max-width: 1200px;  /* 원하는 최대 폭 */
+  margin: 0 auto;     /* 좌우 중앙 정렬 */
+  padding: 0 20px;    /* 모바일 대응을 위한 여유 여백 */
+}
+
+
 .site-header {
   display: flex;
   justify-content: space-between;
@@ -318,4 +325,27 @@ body {
 /* 게임 콘텐츠 섹션 */
 .game-content {
   flex: 1;
+}
+
+.rating-stars {
+  margin-top: 16px;
+  font-size: 20px;
+  color: 2c2c2c;
+}
+
+.game-price {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.buy-button {
+  margin-top: 16px;
+  padding: 12px 20px;
+  background-color: #ff6b00;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
 }
