@@ -4,34 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="css/common.css">
-  <style>
-    .login-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 300px;
-    }
-    .login-box {
-      background-color: #f5f5f5;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-    .login-box button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      border: none;
-      background-color: #ff6b00;
-      color: white;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .login-box button:hover {
-      background-color: #e85e00;
-    }
-  </style>
 </head>
 <body>
 
