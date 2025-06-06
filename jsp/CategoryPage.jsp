@@ -47,10 +47,10 @@
             genreButton.onclick = () => {
                 window.location.href = 'GameListPage.html?category=' + encodeURIComponent(genre);
             };
-          }
     <%
-        }
+          }
     %>
+        }
         loadGenres();  // 페이지 로드 시 장르 버튼들 생성
     <%
 
