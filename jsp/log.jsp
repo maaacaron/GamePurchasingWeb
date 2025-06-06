@@ -4,11 +4,9 @@
         {
                 try
                 {
-                        // ·Î±× ÆÄÀÏ : ex) /var/lib/tomcat8/webapps/ROOT/steam/jsp/log.txt, /usr/local/tomcat/webapps/ROOT/steam/jsp/log.txt
-                        final String logFileName = "/usr/local/tomcat/webapps/ROOT/steam/jsp/log.txt";
+                        final String logFileName = "/usr/local/tomcat/webapps/ROOT/Web-DB/GamePurchasingWeb/jsp/log.txt";
                         BufferedWriter writer = new BufferedWriter( new FileWriter( logFileName, true ) );
 
-                        // ·Î±× µ¥ÀÌÅÍ Ãâ·Â
                         writer.append( "\nTime:\t" + LocalDate.now() + " " + LocalTime.now()    // 시간
                                 + "\tSessionID:\t" + session.getId()                            // 세션 ID
                                 + "\tURI:\t" + request.getRequestURI()                          // URI
