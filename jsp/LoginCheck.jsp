@@ -2,17 +2,6 @@
 <% request.setCharacterEncoding("UTF-8");%>
 <%@ include file="SQLcontants.jsp" %>
 <%@ include file="log.jsp" %>
-<%
-    String userId = request.getParameter("userId");
-    boolean success = (user != null); // 로그인 처리 결과 기준
-
-    if (success) {
-        writeLog("로그인 성공", request, session);
-    } else {
-        writeLog("로그인 실패", request, session);
-    }
-%>
-
 
 <%
     String userId = request.getParameter("userId");
@@ -50,6 +39,7 @@
         session.setAttribute("userId", userDbId);
         session.setAttribute("userName", userName);
         session.setAttribute("isAdmin", isAdmin);
+        writeLog("로그인 성공", request, session);
 %>
         <script>
             alert("로그인 성공!");
@@ -63,5 +53,6 @@
             history.back();
         </script>
 <%
+        writeLog("로그인 실패", request, session);
     }
 %>
