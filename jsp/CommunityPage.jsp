@@ -9,16 +9,16 @@
 </head>
 <body>
 
-  <%@ include file="header.jsp" %>
-    <%@ include file="log.jsp" %>
-    <%
-        writeLog("페이지 접근", request, session);
-    %>
+<%@ include file="header.jsp" %>
+<%@ include file="log.jsp" %>
+<%
+    writeLog("페이지 접근", request, session);
+%>
 
 <main>
 <%
     String title = "";
-    Int id = 0;
+    int id = 0;
 
     try {
         Class.forName(jdbc_driver);

@@ -12,9 +12,19 @@
   String gameIdParam = request.getParameter("gameId");
 
   if (userId == null || userId.isEmpty()) {
-      out.println("<p style='color:red;'>로그인이 필요합니다.</p>");
+%>
+    <script>
+        alert("로그인이 필요합니다.");
+        location.href = "LoginPage.jsp";
+    </script>
+<%
   } else if (gameIdParam == null || gameIdParam.isEmpty()) {
-      out.println("<p style='color:red;'>게임 ID가 유효하지 않습니다.</p>");
+%>
+    <script>
+        alert("게임 ID가 유효하지 않습니다.");
+        history.back();
+    </script>
+<%
   } else {
       try {
           Class.forName(jdbc_driver);
@@ -26,7 +36,12 @@
           // 유저 ID로 유저 DB 번호 가져오기
           ResultSet userRs = stmt.executeQuery("SELECT ID FROM User WHERE UserID = '" + userId + "'");
           if (!userRs.next()) {
-              out.println("<p style='color:red;'>유효하지 않은 사용자입니다.</p>");
+%>
+    <script>
+        alert("유효하지 않은 사용자입니다.");
+        location.href = "LoginPage.jsp";
+    </script>
+<%
           } else {
               int userDbId = userRs.getInt("ID");
 
@@ -64,7 +79,12 @@
           stmt.close();
           conn.close();
       } catch (Exception e) {
-          out.println("<p style='color:red;'>DB 오류: " + e.getMessage() + "</p>");
+%>
+    <script>
+        alert("DB 오류 발생: <%= e.getMessage().replace("\"", "'") %>");
+        history.back();
+    </script>
+<%
       }
   }
 %>
