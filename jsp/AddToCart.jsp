@@ -3,7 +3,7 @@
 <%@ include file="SQLcontants.jsp" %>
 <%@ include file="log.jsp" %>
 <%
-    writeLog("장바구니에 게임 추가" + gameId, request, session);
+    writeLog("장바구니에 게임 추가", request, session);
 %>
 
 

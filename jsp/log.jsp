@@ -12,17 +12,17 @@
                     + "\tBrowser:\t" + request.getHeader("User-Agent")
                     + "\tMessage:\t" + message);
 
-            String searchTerm = request.getParameter("search");
+            String searchTerm = request.getParameter("search");         //검색한 게임
             if (searchTerm != null && !searchTerm.isEmpty()) {
                 writer.append("\tSearch:\t" + searchTerm);
             }
 
-            String gameId = request.getParameter("gameId");
+            String gameId = request.getParameter("gameId");             //게임 id(장바구니에서)
             if (gameId != null) {
                 writer.append("\tGameID:\t" + gameId);
             }
 
-            String userId = request.getParameter("userId");
+            String userId = request.getParameter("userId");             //유저 id(로그인)
             if (userId != null) {
                 writer.append("\tUserID:\t" + userId);
             }
