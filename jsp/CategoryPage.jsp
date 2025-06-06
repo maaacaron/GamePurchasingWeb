@@ -45,7 +45,7 @@
 
             // 클릭 이벤트로 이동 처리
             genreButton.onclick = () => {
-                window.location.href = 'GameListPage.html?category=' + encodeURIComponent(genre);
+                window.location.href = 'GameListPage.jsp?category=' + encodeURIComponent(genre);
             };
     <%
           }
