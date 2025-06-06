@@ -16,24 +16,18 @@
 %>
 
 <%
-  String genre = request.getParameter("genre");
+  String genre[] = request.getParameter("genre");
   String discount = request.getParameter("discount");
-  String priceRange = request.getParameter("priceRange");
 
   if (genre == null) genre = "";
   if (discount == null) discount = "";
-  if (priceRange == null) priceRange = "all";
 
-  int minPrice = 0;
-  int maxPrice = Integer.MAX_VALUE;
+  int minPrice = request.getParameter("minPrice");
+  int maxPrice = request.getParameter("maxPrice");
 
-  if ("0-10000".equals(priceRange)) {
-    maxPrice = 10000;
-  } else if ("10000-30000".equals(priceRange)) {
-    minPrice = 10000;
-    maxPrice = 30000;
-  } else if ("30000+".equals(priceRange)) {
-    minPrice = 30000;
+  if (minPrice == null) minPrice = 0;
+  if (maxPrice == null) maxPrice = 0;
+
   }
 %>
 
@@ -43,7 +37,7 @@
     <h3>필터</h3>
     <form method="get" action="GameListPage.jsp">
       <div class="filter-group">
-        <label><input type="checkbox" id="discountFilter" value="true" <%= "true".equals(discount) ? "checked" : "" %>> 할인 중인 게임만</label>
+        <label><input type="checkbox" id="discount" name="discount" value="true" <%= "true".equals(discount) ? "checked" : "" %>> 할인 중인 게임만</label>
       </div>
 
       <div class="filter-group">
@@ -60,7 +54,7 @@
 
           while (rs.next()) {
             String genreName = rs.getString("Name");
-            if(genreName.equals(genre))
+            if(java.util.Arrays.asList(genre).contains(genreName))
             {
         %>
             <label><input type="checkbox" id="genreFilter" value="<%= genreName %>" checked> <%= genreName %></label>
