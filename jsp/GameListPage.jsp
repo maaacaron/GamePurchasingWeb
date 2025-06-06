@@ -22,6 +22,9 @@
   String discount = request.getParameter("discount");
   if (discount == null) discount = "";
 
+  String genreMode = request.getParameter("genreMode");
+  if (genreMode == null) genreMode = "or";  // 기본값은 OR
+
   String minPriceS = request.getParameter("minPrice");
   String maxPriceS = request.getParameter("maxPrice");
   int minPrice = (minPriceS != null) ? Integer.parseInt(minPriceS) : 0;
@@ -37,6 +40,13 @@
       <div class="filter-group">
         <label><input type="checkbox" id="discount" name="discount" value="true" <%= "true".equals(discount) ? "checked" : "" %>> 할인 중인 게임만</label>
       </div>
+
+      <div class="filter-group">
+        <label>장르 조건:</label><br>
+        <label><input type="radio" name="genreMode" value="or" <%= "or".equals(genreMode) ? "checked" : "" %>> OR 조건</label><br>
+        <label><input type="radio" name="genreMode" value="and" <%= "and".equals(genreMode) ? "checked" : "" %>> AND 조건</label>
+      </div>
+
 
       <div class="filter-group">
         <label>장르 선택:</label>
@@ -99,14 +109,22 @@
 
           StringBuilder query = new StringBuilder("SELECT * FROM Game WHERE 1=1");
 
-          if (genres != null && genres.length > 0) {
-            query.append(" AND ID IN (SELECT GameID FROM GameGenre g JOIN Genre gr ON g.GenreID = gr.ID WHERE gr.Name IN (");
-            for (int i = 0; i < genres.length; i++) {
+          if (genres.length > 0) {
+            if ("or".equals(genreMode)) {
+              query.append(" AND ID IN (SELECT GameID FROM GameGenre g JOIN Genre gr ON g.GenreID = gr.ID WHERE gr.Name IN (");
+              for (int i = 0; i < genres.length; i++) {
                 query.append("'").append(genres[i]).append("'");
                 if (i < genres.length - 1) query.append(", ");
+              }
+              query.append("))");
+            } else if ("and".equals(genreMode)) {
+              for (String g : genres) {
+                query.append(" AND ID IN (SELECT GameID FROM GameGenre g JOIN Genre gr ON g.GenreID = gr.ID WHERE gr.Name = '")
+                     .append(g).append("')");
+              }
             }
-            query.append("))");
           }
+
 
           if ("true".equals(discount)) {
             query.append(" AND Discount = true");
