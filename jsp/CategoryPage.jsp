@@ -19,6 +19,8 @@
 <main>
   <br>
   <div class="genre-grid" id="genreGrid">
+  </div>
+</main>
     <%
       try {
           Class.forName(jdbc_driver);
@@ -47,18 +49,16 @@
         }
     %>
         loadGenres();  // 페이지 로드 시 장르 버튼들 생성
-      </script>
     <%
 
-          rs.close();
-          stmt.close();
-          conn.close();
+        rs.close();
+        stmt.close();
+        conn.close();
       } catch (Exception e) {
           out.println("<p style='color:red;'>DB 오류: " + e.getMessage() + "</p>");
       }
     %>
-  </div>
-</main>
+      </script>
 
 </body>
 </html>
