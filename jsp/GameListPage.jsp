@@ -21,8 +21,8 @@
 
   if (discount == null) discount = "";
 
-  int minPrice = request.getParameter("minPrice");
-  int maxPrice = request.getParameter("maxPrice");
+  int minPrice = Integer.parseInt(request.getParameter("minPrice"));
+  int maxPrice = Integer.parseInt(request.getParameter("maxPrice"));
 
   if (minPrice == null) minPrice = 0;
   if (maxPrice == null) maxPrice = 0;
