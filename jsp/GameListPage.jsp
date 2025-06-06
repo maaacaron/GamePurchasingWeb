@@ -17,29 +17,15 @@
 
 <%
   String[] genres = request.getParameterValues("genre");
-  String discount = request.getParameter("discount");
+  if (genres == null) genres = new String[0];
 
-  if (genres == null) genres = [];
+  String discount = request.getParameter("discount");
   if (discount == null) discount = "";
 
   String minPriceS = request.getParameter("minPrice");
   String maxPriceS = request.getParameter("maxPrice");
-
-  int minPrice = 0;
-  int maxPrice = 200000;
-
-  try {
-      if (minPriceS != null && !minPriceS.isEmpty()) {
-          minPrice = Integer.parseInt(minPriceS);
-      }
-      if (maxPriceS != null && !maxPriceS.isEmpty()) {
-          maxPrice = Integer.parseInt(maxPriceS);
-      }
-  } catch (NumberFormatException e) {
-      // 잘못된 입력이 있으면 기본값 유지
-      minPrice = 0;
-      maxPrice = 200000;
-  }
+  int minPrice = (minPriceS != null) ? Integer.parseInt(minPriceS) : 0;
+  int maxPrice = (maxPriceS != null) ? Integer.parseInt(maxPriceS) : 200000;
 
 %>
 
@@ -66,7 +52,7 @@
 
           while (rs.next()) {
             String genreName = rs.getString("Name");
-            if(java.util.Arrays.asList(genre).contains(genreName))
+            if(java.util.Arrays.asList(genres).contains(genreName))
             {
         %>
             <label><input type="checkbox" name="genre" value="<%= genreName %>" checked> <%= genreName %></label>
@@ -103,7 +89,7 @@
 
   <!-- 우측 게임 목록 -->
   <section class="game-content">
-    <h2><%= genres.isEmpty() ? "전체 게임 목록" : "장르: " + genres %></h2>
+    <h2><%= genres.length == 0 ? "전체 게임 목록" : "장르: " + String.join(", ", genres) %></h2>
     <div class="game-grid">
       <%
         try {
