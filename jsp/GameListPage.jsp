@@ -43,7 +43,7 @@
     <h3>필터</h3>
     <form method="get" action="GameListPage.jsp">
       <div class="filter-group">
-        <label><input type="checkbox" name="discount" value="true" <%= "true".equals(discount) ? "checked" : "" %>> 할인 중인 게임만</label>
+        <label><input type="checkbox" id="discountFilter" value="true" <%= "true".equals(discount) ? "checked" : "" %>> 할인 중인 게임만</label>
       </div>
 
       <div class="filter-group">
@@ -60,10 +60,17 @@
 
           while (rs.next()) {
             String genreName = rs.getString("Name");
+            if(genreName === genre)
+            {
         %>
-            <input type="hidden" name="genre" value="<%= genreName %>">
+            <label><input type="checkbox" id="genreFilter" value="<%= genreName %>" checked></label>
         <%
-          }
+            } else
+            { 
+        %>
+            <label><input type="checkbox" id="genreFilter" value="<%= genreName %>"></label>
+        <%
+            }
           rs.close();
           stmt.close();
           conn.close();
