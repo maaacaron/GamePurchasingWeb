@@ -3,10 +3,10 @@
         final String mySQL_id = "HamYiHyeon";
 
         // MySQL Password
-        final String mySQL_password = "116512eh";
+        final String mySQL_password = "WebServer123!";
 
         // MySQL Database
-        final String mySQL_database = "jdbc:mysql://13.236.6.64:3306/WebServerCManagement";
+        final String mySQL_database = "jdbc:mysql://3.27.136.222:3306/WebServerCManagement";
 
         // JDBC Driver : ex) com.mysql.jdbc.Driver, org.gjt.mm.mysql.Driver
         final String jdbc_driver = "com.mysql.jdbc.Driver";
