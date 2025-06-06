@@ -16,10 +16,10 @@
 %>
 
 <%
-  String genre = request.getParameter("genre");
+  String[] genres = request.getParameterValues("genre");
   String discount = request.getParameter("discount");
 
-  if (genre == null) genre = "";
+  if (genres == null) genres = [];
   if (discount == null) discount = "";
 
   String minPriceS = request.getParameter("minPrice");
@@ -69,12 +69,11 @@
             if(java.util.Arrays.asList(genre).contains(genreName))
             {
         %>
-            <label><input type="checkbox" id="genreFilter" value="<%= genreName %>" checked> <%= genreName %></label>
+            <label><input type="checkbox" name="genre" value="<%= genreName %>" checked> <%= genreName %></label>
         <%
-            } else
-            { 
+            } else { 
         %>
-            <label><input type="checkbox" id="genreFilter" value="<%= genreName %>"> <%= genreName %></label>
+            <label><input type="checkbox" name="genre" value="<%= genreName %>"> <%= genreName %></label>
         <%
             }
           }
@@ -104,7 +103,7 @@
 
   <!-- 우측 게임 목록 -->
   <section class="game-content">
-    <h2><%= genre.isEmpty() ? "전체 게임 목록" : "장르: " + genre %></h2>
+    <h2><%= genres.isEmpty() ? "전체 게임 목록" : "장르: " + genres %></h2>
     <div class="game-grid">
       <%
         try {
@@ -114,8 +113,13 @@
 
           StringBuilder query = new StringBuilder("SELECT * FROM Game WHERE 1=1");
 
-          if (!genre.isEmpty()) {
-            query.append(" AND ID IN (SELECT GameID FROM GameGenre g JOIN Genre gr ON g.GenreID = gr.ID WHERE gr.Name = '").append(genre).append("')");
+          if (genres != null && genres.length > 0) {
+            query.append(" AND ID IN (SELECT GameID FROM GameGenre g JOIN Genre gr ON g.GenreID = gr.ID WHERE gr.Name IN (");
+            for (int i = 0; i < genres.length; i++) {
+                query.append("'").append(genres[i]).append("'");
+                if (i < genres.length - 1) query.append(", ");
+            }
+            query.append("))");
           }
 
           if ("true".equals(discount)) {
