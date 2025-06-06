@@ -40,7 +40,7 @@
     <h3>필터</h3>
     <form method="get" action="GameListPage.jsp">
       <div class="filter-group">
-        <label><input type="checkbox" id="discount" name="discount" value="true" <%= "true".equals(discount) ? "checked" : "" %>> 할인 중인 게임만</label>
+        <label><input type="checkbox" name="discount" value="true" <%= "true".equals(discount) ? "checked" : "" %>> 할인 중인 게임만</label>
       </div>
 
       <div class="filter-group">
@@ -141,9 +141,8 @@
             }
           }
 
-
           if ("true".equals(discount)) {
-            query.append(" AND Discount = true");
+            query.append(" AND discount = true");
           }
 
           query.append(" AND Price BETWEEN ").append(minPrice).append(" AND ").append(maxPrice);
