@@ -71,6 +71,8 @@
             <label><input type="checkbox" id="genreFilter" value="<%= genreName %>"></label>
         <%
             }
+          }
+          
           rs.close();
           stmt.close();
           conn.close();
