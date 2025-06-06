@@ -60,7 +60,7 @@
 
           while (rs.next()) {
             String genreName = rs.getString("Name");
-            if(genreName == genre)
+            if(genreName.equals(genre))
             {
         %>
             <label><input type="checkbox" id="genreFilter" value="<%= genreName %>" checked> <%= genreName %></label>
