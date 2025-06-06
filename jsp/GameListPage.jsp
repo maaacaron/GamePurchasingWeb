@@ -147,7 +147,7 @@
 
           query.append(" AND Price BETWEEN ").append(minPrice).append(" AND ").append(maxPrice);
 
-          ResultSet rs = stmt.executeQuery("SELECT DISTINCT Discount FROM Game;");
+          ResultSet rs = stmt.executeQuery(query.toString());
 
           boolean hasResult = false;
           while (rs.next()) {
