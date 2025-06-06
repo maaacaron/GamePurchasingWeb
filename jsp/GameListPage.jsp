@@ -28,8 +28,6 @@
 
   if (minPriceS == null) minPrice = 0;
   if (maxPriceS == null) maxPrice = 0;
-
-  }
 %>
 
 <main style="display: flex; padding: 20px;">
