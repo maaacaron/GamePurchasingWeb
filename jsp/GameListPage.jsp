@@ -58,10 +58,10 @@
 
           ResultSet rs = stmt.executeQuery(query.toString());
 
-          while (rs.next) {
-            String genre = rs.getString("Name");
+          while (rs.next()) {
+            String genreName = rs.getString("Name");
         %>
-            <input type="hidden" name="genre" value="<%= genre %>">
+            <input type="hidden" name="genre" value="<%= genreName %>">
         <%
           }
           rs.close();
