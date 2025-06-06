@@ -16,9 +16,9 @@
 %>
 
 <%
-  String genre[] = request.getParameter("genre");
+  String genre = request.getParameter("genre");
   String discount = request.getParameter("discount");
-  
+
   if (discount == null) discount = "";
 
   int minPrice = request.getParameter("minPrice");
