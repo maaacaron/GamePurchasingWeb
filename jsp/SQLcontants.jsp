@@ -6,7 +6,7 @@
         final String mySQL_password = "116512eh";
 
         // MySQL Database
-        final String mySQL_database = "jdbc:mysql://52.65.232.17:3306/WebServerCManagement";
+        final String mySQL_database = "jdbc:mysql://13.236.6.64:3306/WebServerCManagement";
 
         // JDBC Driver : ex) com.mysql.jdbc.Driver, org.gjt.mm.mysql.Driver
         final String jdbc_driver = "com.mysql.jdbc.Driver";
