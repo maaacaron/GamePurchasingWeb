@@ -25,18 +25,19 @@
   String maxPriceS = request.getParameter("maxPrice");
 
   int minPrice = 0;
-  if (minPriceS == null) {
-      minPrice = 0;
-    }
-  } else {
-    minPrice = Integer.parseInt(minPriceS);
-  }
+  int maxPrice = 200000;
 
-  int maxPrice = 0;
-  if (maxPriceS == null) { 
-    int maxPrice = 200000;
-  } else {
-    maxPrice = Integer.parseInt(maxPriceS);
+  try {
+      if (minPriceS != null && !minPriceS.isEmpty()) {
+          minPrice = Integer.parseInt(minPriceS);
+      }
+      if (maxPriceS != null && !maxPriceS.isEmpty()) {
+          maxPrice = Integer.parseInt(maxPriceS);
+      }
+  } catch (NumberFormatException e) {
+      // 잘못된 입력이 있으면 기본값 유지
+      minPrice = 0;
+      maxPrice = 200000;
   }
 
 %>
