@@ -27,8 +27,10 @@
 
   String minPriceS = request.getParameter("minPrice");
   String maxPriceS = request.getParameter("maxPrice");
-  int minPrice = (minPriceS != null) ? Integer.parseInt(minPriceS) : 0;
-  int maxPrice = (maxPriceS != null) ? Integer.parseInt(maxPriceS) : 200000;
+
+  int minPrice = (minPriceS != null && !minPriceS.isEmpty()) ? Integer.parseInt(minPriceS) : 0;
+  int maxPrice = (maxPriceS != null && !maxPriceS.isEmpty()) ? Integer.parseInt(maxPriceS) : 200000;
+
 
 %>
 
@@ -86,15 +88,29 @@
 
       <div class="filter-group">
         <label>가격 범위:</label>
-        <input type="range" id="minPrice" min="0" max="200000" step="1000" value="0">
-        <p id="minPriceLabel">최소: 0원</p>
+        <input type="range" id="minPrice" name="minPrice" min="0" max="200000" step="1000" value="<%= minPrice %>">
+        <p id="minPriceLabel">최소: <%= minPrice %>원</p>
 
-        <input type="range" id="maxPrice" min="0" max="200000" step="1000" value="200000">
-        <p id="maxPriceLabel">최대: 200000원</p>
+        <input type="range" id="maxPrice" name="maxPrice" min="0" max="200000" step="1000" value="<%= maxPrice %>">
+        <p id="maxPriceLabel">최대: <%= maxPrice %>원</p>
       </div>
 
       <button type="submit">적용</button>
     </form>
+    <script>
+      const minSlider = document.getElementById('minPrice');
+      const maxSlider = document.getElementById('maxPrice');
+      const minLabel = document.getElementById('minPriceLabel');
+      const maxLabel = document.getElementById('maxPriceLabel');
+
+      minSlider.addEventListener('input', () => {
+        minLabel.textContent = '최소: ' + minSlider.value + '원';
+      });
+
+      maxSlider.addEventListener('input', () => {
+        maxLabel.textContent = '최대: ' + maxSlider.value + '원';
+      });
+    </script>
   </aside>
 
   <!-- 우측 게임 목록 -->
