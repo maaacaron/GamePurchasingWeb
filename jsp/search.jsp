@@ -1,6 +1,12 @@
 <%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
 <% request.setCharacterEncoding("UTF-8");%>
 <%@ include file="SQLcontants.jsp" %>
+<%@ include file="log.jsp" %>
+
+<%
+    writeLog("검색 수행", request, session);
+%>
+
 <!DOCTYPE html>
 <html>
 <head>

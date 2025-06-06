@@ -11,6 +11,10 @@
 <body>
 
 <%@ include file="header.jsp" %>
+<%@ include file="log.jsp" %>
+<%
+    writeLog("페이지 접근", request, session);
+%>
 
 <main>
   <h2>내 라이브러리</h2>

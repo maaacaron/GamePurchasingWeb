@@ -10,6 +10,10 @@
 <body>
 
 <%@ include file="header.jsp" %>
+<%@ include file="log.jsp" %>
+<%
+    writeLog("페이지 접근", request, session);
+%>
 
 <%
   String genre = request.getParameter("genre");

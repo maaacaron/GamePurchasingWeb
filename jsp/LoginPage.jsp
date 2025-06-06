@@ -8,6 +8,11 @@
 <body>
 
   <%@ include file="header.jsp" %>
+  <%@ include file="log.jsp" %>
+  <%
+      writeLog("게임 상세 조회", request, session);
+  %>
+
 
   <main class="login-wrapper">
     <div class="login-box">

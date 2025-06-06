@@ -4,12 +4,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="../css/common.css">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/common.css">
 </head>
 <body>
 
-  <%@ include file="header.jsp" %>
+    <%@ include file="header.jsp" %>
+    <%@ include file="log.jsp" %>
+    <%
+        writeLog("게임 상세 조회", request, session);
+    %>
 
 <main>
 <%

@@ -11,6 +11,10 @@
 <body>
 
 <%@ include file="header.jsp" %>
+<%@ include file="log.jsp" %>
+<%
+    writeLog("게임 상세 조회", request, session);
+%>
 
 <main>
   <h2 style="padding: 30px;">장르별 게임 보기</h2>

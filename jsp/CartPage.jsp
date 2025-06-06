@@ -10,6 +10,10 @@
 <body>
 
 <%@ include file="header.jsp" %>
+<%@ include file="log.jsp" %>
+<%
+    writeLog("게임 상세 조회", request, session);
+%>
 
 <main>
   <h2>장바구니</h2>

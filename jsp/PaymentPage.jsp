@@ -8,6 +8,10 @@
 <body>
 
 <%@ include file="header.jsp" %>
+<%@ include file="log.jsp" %>
+<%
+    writeLog("페이지 접근", request, session);
+%>
 
 <main class="login-wrapper">
   <div class="login-box">

@@ -4,12 +4,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="../css/common.css">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/common.css">
 </head>
 <body>
 
-  <%@ include file="header.jsp" %>
+<%@ include file="header.jsp" %>
+<%@ include file="log.jsp" %>
+<%
+    writeLog("페이지 접근", request, session);
+%>
 
 <main>
 
