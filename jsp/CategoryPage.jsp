@@ -30,6 +30,9 @@
 
     %>
       <script>
+
+        const genreGrid = document.getElementById('genreGrid');
+
         function loadGenres() {
     <%
           while (rs.next()) {
