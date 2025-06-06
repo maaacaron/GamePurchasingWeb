@@ -142,7 +142,7 @@
           }
 
           if ("true".equals(discount)) {
-            query.append(" AND Discount = 1");
+            query.append(" AND Discount != 0");
           }
 
           query.append(" AND Price BETWEEN ").append(minPrice).append(" AND ").append(maxPrice);
