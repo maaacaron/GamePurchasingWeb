@@ -93,7 +93,7 @@
         <a href="Game_Detail.jsp?id=<%= id %>" class="game-card">
           <img src="<%= image %>" alt="<%= name %>">
           <h3 class="game-title"><%= name %></h3>
-          <p class="game-description"><%= price %>원</p>
+          <p class="game-description"><%= (price == 0 ? "무료" : price + "원") %></p>
         </a>
       <%
             }
