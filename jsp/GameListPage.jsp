@@ -1,88 +1,146 @@
-<%@ page language="java" import="java.sql.*, java.util.*" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
-<% request.setCharacterEncoding("UTF-8"); %>
+<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
+<% request.setCharacterEncoding("UTF-8");%>
 <%@ include file="SQLcontants.jsp" %>
-<%@ include file="header.jsp" %>
-<%@ include file="log.jsp" %>
-<%
-    writeLog("페이지 접근", request, session);
-%>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>게임 목록</title>
   <link rel="stylesheet" href="../css/common.css">
 </head>
 <body>
-<main>
-  <div class="filter-bar">
+
+<%@ include file="header.jsp" %>
+<%@ include file="log.jsp" %>
+<%
+  writeLog("페이지 접근", request, session);
+%>
+
+<%
+  String genre = request.getParameter("genre");
+  String discount = request.getParameter("discount");
+  String priceRange = request.getParameter("priceRange");
+
+  if (genre == null) genre = "";
+  if (discount == null) discount = "";
+  if (priceRange == null) priceRange = "all";
+
+  int minPrice = 0;
+  int maxPrice = Integer.MAX_VALUE;
+
+  if ("0-10000".equals(priceRange)) {
+    maxPrice = 10000;
+  } else if ("10000-30000".equals(priceRange)) {
+    minPrice = 10000;
+    maxPrice = 30000;
+  } else if ("30000+".equals(priceRange)) {
+    minPrice = 30000;
+  }
+%>
+
+<main style="display: flex; padding: 20px;">
+  <!-- 좌측 필터 영역 -->
+  <aside class="sidebar">
+    <h3>필터</h3>
     <form method="get" action="GameListPage.jsp">
-      <select name="category" id="categoryFilter">
-        <option value="">장르 선택</option>
-        <%
-          try {
-              Class.forName(jdbc_driver);
-              Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-              Statement stmt = conn.createStatement();
-              ResultSet rs = stmt.executeQuery("SELECT Name FROM Genre ORDER BY Name");
+      <div class="filter-group">
+        <label><input type="checkbox" name="discount" value="true" <%= "true".equals(discount) ? "checked" : "" %>> 할인 중인 게임만</label>
+      </div>
 
-              while (rs.next()) {
-                  String genre = rs.getString("Name");
-                  String selected = genre.equals(request.getParameter("category")) ? "selected" : "";
-        %>
-          <option value="<%= genre %>" <%= selected %>><%= genre %></option>
-        <%
-              }
-
-              rs.close();
-              stmt.close();
-              conn.close();
-          } catch (Exception e) {
-              out.println("<option disabled>장르 불러오기 실패</option>");
-          }
-        %>
-      </select>
-      <input type="submit" value="검색">
-    </form>
-  </div>
-
-  <div class="game-grid">
-    <%
-      String category = request.getParameter("category");
-      String query = "SELECT * FROM Game";
-      if (category != null && !category.isEmpty()) {
-          query += " WHERE Genre = '" + category + "'";
-      }
-      query += " ORDER BY ID DESC";
-
-      try {
+      <div class="filter-group">
+        <label>장르 선택:</label>
+      <%
+        try {
           Class.forName(jdbc_driver);
           Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
           Statement stmt = conn.createStatement();
-          ResultSet rs = stmt.executeQuery(query);
 
-          while (rs.next()) {
-              int id = rs.getInt("ID");
-              String name = rs.getString("Name");
-              String image = rs.getString("Image");
-              int price = rs.getInt("Price");
-    %>
-      <a href="Game_Detail.jsp?id=<%= id %>" class="game-card">
-        <img src="<%= image %>" alt="<%= name %>">
-        <p class="game-title"><%= name %></p>
-        <p class="game-description"><%= price == 0 ? "무료" : price + "원" %></p>
-      </a>
-    <%
+          StringBuilder query = new StringBuilder("SELECT Name FROM Genre ORDER BY Name");
+
+          ResultSet rs = stmt.executeQuery(query.toString());
+
+          while (rs.next) {
+            String genre = rs.getString("Name");
+        %>
+            <input type="hidden" name="genre" value="<%= genre %>">
+        <%
           }
-
           rs.close();
           stmt.close();
           conn.close();
-      } catch (Exception e) {
-          out.println("<p style='color:red;'>DB 오류: " + e.getMessage() + "</p>");
-      }
-    %>
-  </div>
+        } catch (Exception e) {
+            out.println("<option disabled>장르 불러오기 실패</option>");
+        }
+        %>
+      </div>
+
+
+      <div class="filter-group">
+        <label>가격 범위:</label>
+        <input type="range" id="minPrice" min="0" max="200000" step="1000" value="0">
+        <p id="minPriceLabel">최소: 0원</p>
+
+        <input type="range" id="maxPrice" min="0" max="200000" step="1000" value="200000">
+        <p id="maxPriceLabel">최대: 200000원</p>
+      </div>
+
+      <button type="submit">적용</button>
+    </form>
+  </aside>
+
+  <!-- 우측 게임 목록 -->
+  <section class="game-content">
+    <h2><%= genre.isEmpty() ? "전체 게임 목록" : "장르: " + genre %></h2>
+    <div class="game-grid">
+      <%
+        try {
+          Class.forName(jdbc_driver);
+          Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
+          Statement stmt = conn.createStatement();
+
+          StringBuilder query = new StringBuilder("SELECT * FROM Game WHERE 1=1");
+
+          if (!genre.isEmpty()) {
+            query.append(" AND ID IN (SELECT GameID FROM GameGenre g JOIN Genre gr ON g.GenreID = gr.ID WHERE gr.Name = '").append(genre).append("')");
+          }
+
+          if ("true".equals(discount)) {
+            query.append(" AND Discount = true");
+          }
+
+          query.append(" AND Price BETWEEN ").append(minPrice).append(" AND ").append(maxPrice);
+
+          ResultSet rs = stmt.executeQuery(query.toString());
+
+          boolean hasResult = false;
+          while (rs.next()) {
+            hasResult = true;
+            int id = rs.getInt("ID");
+            String name = rs.getString("Name");
+            String image = rs.getString("Image");
+            int price = rs.getInt("Price");
+      %>
+        <a href="Game_Detail.jsp?id=<%= id %>" class="game-card">
+          <img src="<%= image %>" alt="<%= name %>">
+          <h3 class="game-title"><%= name %></h3>
+          <p class="game-description"><%= (price == 0 ? "무료" : price + "원") %></p>
+        </a>
+      <%
+            }
+
+            if (!hasResult) {
+                out.println("<p>해당 조건의 게임이 없습니다.</p>");
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            out.println("<p style='color:red;'>DB 오류: " + e.getMessage() + "</p>");
+        }
+      %>
+    </div>
+  </section>
 </main>
+
 </body>
 </html>
