@@ -147,7 +147,7 @@
 
           query.append(" AND Price BETWEEN ").append(minPrice).append(" AND ").append(maxPrice);
 
-          ResultSet rs = stmt.executeQuery("SELECT * FROM Game WHERE Discount = 1");
+          ResultSet rs = stmt.executeQuery("SELECT * FROM Game WHERE Discount = 0");
 
           boolean hasResult = false;
           while (rs.next()) {
