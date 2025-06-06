@@ -32,13 +32,13 @@
       <script>
 
         const genreGrid = document.getElementById('genreGrid');
+        const genreButton = document.createElement('button');
 
         function loadGenres() {
     <%
           while (rs.next()) {
             String genre = rs.getString("Name");
     %>
-            const genreButton = document.createElement('button');
             genreButton.className = 'genre-button';
             genreButton.innerText = genre;
             genreGrid.appendChild(genreButton);
