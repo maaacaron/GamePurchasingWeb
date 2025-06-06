@@ -32,7 +32,7 @@
       <script>
 
         const genreGrid = document.getElementById('genreGrid');
-        const genreButton;
+        const genreButton = "";
 
         function loadGenres() {
     <%
