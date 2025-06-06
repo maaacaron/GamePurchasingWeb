@@ -27,7 +27,7 @@
   int maxPrice = Integer.parseInt(maxPriceS);
 
   if (minPriceS == null) minPrice = 0;
-  if (maxPriceS == null) maxPrice = 0;
+  if (maxPriceS == null) maxPrice = 200000;
 %>
 
 <main style="display: flex; padding: 20px;">
