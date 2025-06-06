@@ -24,16 +24,18 @@
   String minPriceS = request.getParameter("minPrice");
   String maxPriceS = request.getParameter("maxPrice");
 
+  int minPrice = 0;
   if {
     (minPriceS == null) minPrice = 0;
   } else {
-    int minPrice = Integer.parseInt(minPriceS);
+    minPrice = Integer.parseInt(minPriceS);
   }
 
+  int maxPrice = 0;
   if { 
-    (maxPriceS == null) maxPrice = 200000;
+    (maxPriceS == null) int maxPrice = 200000;
   }else {
-    int maxPrice = Integer.parseInt(maxPriceS);
+    maxPrice = Integer.parseInt(maxPriceS);
   }
 
 %>
