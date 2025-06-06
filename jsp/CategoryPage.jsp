@@ -40,7 +40,7 @@
             String genre = rs.getString("Name");
     %>
             genreButton.className = 'genre-button';
-            genreButton.innerText = genre;
+            genreButton.innerText = <%= genre %>;
             genreGrid.appendChild(genreButton);
 
             // 클릭 이벤트로 이동 처리
