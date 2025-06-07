@@ -29,8 +29,8 @@
             while (itemsRs.next()) {
                 int gameId = itemsRs.getInt("Game_ID");
 
-                // Purchase 테이블에 저장
-                stmt.executeUpdate("INSERT INTO Purchase (User_ID, Game_ID, PurchaseDate) VALUES (" + userId + ", " + gameId + ", '" + now + "')");
+                // Library 테이블에 저장
+                stmt.executeUpdate("INSERT INTO Library (User_ID, Game_ID, PurchaseDate) VALUES (" + userId + ", " + gameId + ", '" + now + "')");
             }
 
             itemsRs.close();
