@@ -1,82 +1,89 @@
-<%@ page language="java" import="java.sql.*, javax.sql.DataSource, java.util.List, java.util.ArrayList" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
-<% request.setCharacterEncoding("UTF-8");%>
+<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
+<% request.setCharacterEncoding("UTF-8"); %>
 <%@ include file="SQLcontants.jsp" %>
 <%@ include file="log.jsp" %>
 <%
-    writeLog("결제 시도", request, session);
+    writeLog("결제 완료", request, session);
 %>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>결제 완료</title>
-  <link rel="stylesheet" href="../css/common.css">
-</head>
-<body>
-<%@ include file="header.jsp" %>
 
-<main style="padding: 20px;">
 <%
     Integer userId = (Integer) session.getAttribute("userId");
-
     if (userId != null) {
         try {
             Class.forName(jdbc_driver);
             Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
             Statement stmt = conn.createStatement();
 
-            // 유저의 장바구니 ID 조회
             ResultSet cartRs = stmt.executeQuery("SELECT ID FROM Cart WHERE User_ID = " + userId);
             int cartId = -1;
-
             if (cartRs.next()) {
                 cartId = cartRs.getInt("ID");
             }
             cartRs.close();
 
-            if (cartId != -1) {
-                // 장바구니 안의 Game_ID 목록을 수집
-                List<Integer> gameIds = new ArrayList<>();
-                ResultSet itemsRs = stmt.executeQuery("SELECT Game_ID FROM CartItem WHERE Cart_ID = " + cartId);
-                while (itemsRs.next()) {
-                    gameIds.add(itemsRs.getInt("Game_ID"));
+            ResultSet itemsRs = stmt.executeQuery("SELECT Game_ID FROM CartItem WHERE Cart_ID = " + cartId);
+            LocalDate now = java.time.LocalDate.now();
+
+            while (itemsRs.next()) {
+                int gameId = itemsRs.getInt("Game_ID");
+
+                // 🔍 라이브러리 중복 여부 확인
+                ResultSet checkRs = stmt.executeQuery(
+                    "SELECT COUNT(*) FROM Library WHERE User_ID = " + userId + " AND Game_ID = " + gameId
+                );
+                checkRs.next();
+                int count = checkRs.getInt(1);
+
+                if (count == 0) {
+                  // ✔️ 존재하지 않을 때만 구매 처리
+                  stmt.executeUpdate("INSERT INTO Library (User_ID, Game_ID, PurchaseDate) VALUES (" + userId + ", " + gameId + ", '" + now + "')");
+
+                  // 결제 후 장바구니 비우기
+                  stmt.executeUpdate("DELETE FROM CartItem WHERE Cart_ID = " + cartId);
                 }
-                itemsRs.close();
-
-                // 현재 시간
-                LocalDateTime now = LocalDateTime.now();
-
-                // Library 테이블에 삽입
-                for (Integer gameId : gameIds) {
-                    stmt.executeUpdate("INSERT INTO Library (User_ID, Game_ID, PurchaseDate) VALUES (" +
-                        userId + ", " + gameId + ", '" + now + "')");
-                }
-
-                // 장바구니 비우기
-                stmt.executeUpdate("DELETE FROM CartItem WHERE Cart_ID = " + cartId);
+                checkRs.close();
             }
+
+            itemsRs.close();
 
             stmt.close();
             conn.close();
 
-            writeLog("결제 완료", request, session);
+            // 결제 완료 메시지
 %>
-            <h2>결제가 완료되었습니다!</h2>
-            <p>구매해 주셔서 감사합니다.</p>
-            <a href="LibraryPage.jsp" class="button">내 라이브러리로 이동</a>
+            <script>
+                alert("결제가 완료되었습니다!");
+                location.href = "LibraryPage.jsp";
+            </script>
 <%
         } catch (Exception e) {
             out.println("<p style='color:red;'>결제 오류: " + e.getMessage() + "</p>");
         }
-    } else {
-%>
-        <script>
-            alert("로그인이 필요합니다.");
-            location.href = "LoginPage.jsp";
-        </script>
-<%
     }
 %>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/common.css">
+</head>
+<body>
+<%@ include file="header.jsp" %>
+
+<main class="login-wrapper">
+  <div class="login-box">
+    <h2>결제 완료</h2>
+    <p>감사합니다. 결제가 완료되었습니다.</p>
+    <button onclick="goHome()">메인으로 돌아가기</button>
+  </div>
 </main>
+
+<script>
+  function goHome() {
+    window.location.href = 'MainPage.jsp';
+  }
+</script>
 </body>
 </html>
