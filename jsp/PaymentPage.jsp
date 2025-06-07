@@ -41,6 +41,10 @@
                   // 결제 후 장바구니 비우기
                   stmt.executeUpdate("DELETE FROM CartItem WHERE Cart_ID = " + cartId);
                 }
+                else
+                {
+                  alert("이미 보유중인 게임을 제외한 모든 게임이 구매 완료되었습니다.")
+                }
                 checkRs.close();
             }
 
