@@ -65,7 +65,7 @@
             </script>
 <%
         } catch (Exception e) {
-            out.println("<p style='color:red;'>결제 오류: " + e.getMessage() + "</p>");
+            //out.println("<p style='color:red;'>결제 오류: " + e.getMessage() + "</p>");
         }
     }
 %>
