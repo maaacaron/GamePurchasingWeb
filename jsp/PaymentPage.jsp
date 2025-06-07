@@ -43,7 +43,11 @@
                 }
                 else
                 {
+                %>
+                <script>
                   alert("이미 보유중인 게임을 제외한 모든 게임이 구매 완료되었습니다.");
+                </script>
+                <%
                 }
                 checkRs.close();
             }
