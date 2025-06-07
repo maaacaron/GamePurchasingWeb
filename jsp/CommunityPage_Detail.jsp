@@ -1,48 +1,30 @@
-<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
-<% request.setCharacterEncoding("UTF-8");%>
-<%@ include file="SQLcontants.jsp" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="../css/common.css">
-</head>
-<body>
-
-    <%@ include file="header.jsp" %>
-    <%@ include file="log.jsp" %>
-    <%
-        writeLog("페이지 접근", request, session);
-    %>
+<%@ page contentType="text/html; charset=UTF-8" session="true" %>
+<%@ include file="header.jsp" %>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
+<script src="${pageContext.request.contextPath}/js/header-login-status.js"></script>
+<script src="${pageContext.request.contextPath}/js/game-data.js"></script>
 
 <main>
-<%
-    String idPar = request.getParameter("id");
-    String title = null;
-    String content = null;
+  <h2 id="detail-title"></h2>
+  <p id="detail-meta"></p>
+  <p><strong>게임:</strong> <span id="detail-game"></span></p>
+  <div id="detail-content" class="post-content"></div>
+</main>
 
-    try {
-        int id = Integer.parseInt(idParam);
-        Class.forName(jdbc_driver);
-        Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-        Statement stmt = conn.createStatement();
-
-        ResultSet rs = stmt.executeQuery("SELECT title, content FROM Post WHERE id = " + id);
-
-        if (rs.next()) {
-            title = rs.getString("title");    //글 제목 title 변수에 저장
-            content = rs.getString("Content");  //글 본문 content 변수에 저장
-        }
-
-        rs.close();
-        stmt.close();
-        conn.close();
-    } catch (Exception e) {
-        out.println("<p style='color:red;'>DB 오류: " + e.getMessage() + "</p>");
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(location.search);
+    const postId = params.get('postId');
+    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+    const post = posts.find(p => p.id === postId);
+    if (!post) {
+      document.getElementById('detail-title').textContent = '게시글을 찾을 수 없습니다.';
+      return;
     }
-%>
-
-<!-- 여기서 제목이랑 본문 같은것들 출력하면 됨-->
-
-</body>
-</html>
+    document.getElementById('detail-title').textContent = post.title;
+    document.getElementById('detail-meta').textContent = `작성자: ${post.author} | ${new Date(post.timestamp).toLocaleString()}`;
+    const game = games.find(g => g.id === post.gameId);
+    document.getElementById('detail-game').textContent = game ? game.name : '알 수 없음';
+    document.getElementById('detail-content').textContent = post.content;
+  });
+</script>

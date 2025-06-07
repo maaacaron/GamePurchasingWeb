@@ -1,49 +1,57 @@
-<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
-<% request.setCharacterEncoding("UTF-8");%>
-<%@ include file="SQLcontants.jsp" %>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="../css/common.css">
-</head>
-<body>
-
+<%@ page contentType="text/html; charset=UTF-8" session="true" %>
 <%@ include file="header.jsp" %>
-<%@ include file="log.jsp" %>
-<%
-    writeLog("페이지 접근", request, session);
-%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
+<script src="${pageContext.request.contextPath}/js/header-login-status.js"></script>
+<script src="${pageContext.request.contextPath}/js/game-data.js"></script>
 
 <main>
-<%
-    String title = "";
-    int id = 0;
+  <h2>커뮤니티</h2>
+  <div class="filter-group">
+    <label>게임 선택:
+      <select id="gameFilter"></select>
+    </label>
+    <button type="button" onclick="location.href='CommunityPage_Write.jsp'">글 쓰기</button>
+  </div>
+  <ul id="postList"></ul>
+</main>
 
-    try {
-        Class.forName(jdbc_driver);
-        Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-        Statement stmt = conn.createStatement();
+<script>
+  // 게임 필터 로드
+  function loadGameFilter() {
+    const sel = document.getElementById('gameFilter');
+    sel.innerHTML = '<option value="">전체 게임</option>';
+    games.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g.id;
+      opt.textContent = g.name;
+      sel.appendChild(opt);
+    });
+    sel.onchange = loadPosts;
+  }
 
-        String sql = "SELECT title FROM Post";
-        ResultSet rs = stmt.executeQuery(sql);
-
-        while (rs.next()) {
-            title = rs.getString("title");    //글 제목 저장
-            id = rs.getInt("id");             //글 id 저장
-          %>
-            <!-- 여기에서 title 값을 출력하고 href로 CommunityPage_Detail.jsp로 id 값 request로 받을 수 있게 보내면 됨 (while문 내부임)
-                                                                              id 값은 int로 못보낸다고 해서 string으로 보내주면 됨-->
-          <%
-        }
-
-        rs.close();
-        stmt.close();
-        conn.close();
-    } catch (Exception e) {
-        out.println("<p style='color:red;'>DB 오류: " + e.getMessage() + "</p>");
+  // 게시글 로드
+  function loadPosts() {
+    const all = JSON.parse(localStorage.getItem('posts') || '[]');
+    const filter = document.getElementById('gameFilter').value;
+    const list = document.getElementById('postList');
+    list.innerHTML = '';
+    const posts = filter ? all.filter(p => p.gameId === filter) : all;
+    if (!posts.length) {
+      list.innerHTML = '<li>등록된 게시글이 없습니다.</li>';
+      return;
     }
-%>
+    posts.forEach(p => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <a href="CommunityPage_Detail.jsp?postId=${p.id}">
+          [${new Date(p.timestamp).toLocaleString()}] ${p.title} (${p.author})
+        </a>`;
+      list.appendChild(li);
+    });
+  }
 
-</body>
-</html>
+  document.addEventListener('DOMContentLoaded', () => {
+    loadGameFilter();
+    loadPosts();
+  });
+</script>
