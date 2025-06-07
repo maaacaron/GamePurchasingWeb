@@ -8,14 +8,14 @@
 
 <%
     Integer userId = (Integer) session.getAttribute("userId");
-    if (userIdStr != null) {
+    if (userId != null) {
         try {
             Class.forName(jdbc_driver);
             Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
             Statement stmt = conn.createStatement();
 
             // 해당 유저의 Cart ID 조회
-            ResultSet cartRs = stmt.executeQuery("SELECT ID FROM Cart WHERE User_ID = " + userIdStr);
+            ResultSet cartRs = stmt.executeQuery("SELECT ID FROM Cart WHERE User_ID = " + userId);
             int cartId = -1;
             if (cartRs.next()) {
                 cartId = cartRs.getInt("ID");
@@ -30,7 +30,7 @@
                 int gameId = itemsRs.getInt("Game_ID");
 
                 // Purchase 테이블에 저장
-                stmt.executeUpdate("INSERT INTO Purchase (User_ID, Game_ID, PurchaseDate) VALUES (" + userIdStr + ", " + gameId + ", '" + now + "')");
+                stmt.executeUpdate("INSERT INTO Purchase (User_ID, Game_ID, PurchaseDate) VALUES (" + userId + ", " + gameId + ", '" + now + "')");
             }
 
             itemsRs.close();
