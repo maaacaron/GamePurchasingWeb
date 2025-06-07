@@ -49,8 +49,8 @@
                 </script>
                 <%
                 }
-                checkRs.close();
             }
+            checkRs.close();
 
             itemsRs.close();
 
