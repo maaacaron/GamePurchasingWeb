@@ -1,4 +1,4 @@
-<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
+<%@ page language="java" import="java.sql.*, javax.sql.DataSource, java.util.List, java.util.ArrayList" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
 <% request.setCharacterEncoding("UTF-8");%>
 <%@ include file="SQLcontants.jsp" %>
 <%@ include file="log.jsp" %>
@@ -46,9 +46,9 @@
                 // 현재 시간
                 LocalDateTime now = LocalDateTime.now();
 
-                // Purchase 테이블에 삽입
+                // Library 테이블에 삽입
                 for (Integer gameId : gameIds) {
-                    stmt.executeUpdate("INSERT INTO Purchase (User_ID, Game_ID, PurchaseDate) VALUES (" +
+                    stmt.executeUpdate("INSERT INTO Library (User_ID, Game_ID, PurchaseDate) VALUES (" +
                         userId + ", " + gameId + ", '" + now + "')");
                 }
 
