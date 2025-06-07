@@ -7,7 +7,7 @@
 %>
 
 <%
-    String userIdStr = (String) session.getAttribute("userId");
+    Integer userId = (Integer) session.getAttribute("userId");
     if (userIdStr != null) {
         try {
             Class.forName(jdbc_driver);
