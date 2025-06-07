@@ -29,7 +29,7 @@
 
                 // 🔍 라이브러리 중복 여부 확인
                 ResultSet checkRs = stmt.executeQuery(
-                    "SELECT COUNT(*) FROM Purchase WHERE User_ID = " + userId + " AND Game_ID = " + gameId
+                    "SELECT COUNT(*) FROM Library WHERE User_ID = " + userId + " AND Game_ID = " + gameId
                 );
                 checkRs.next();
                 int count = checkRs.getInt(1);
@@ -37,7 +37,7 @@
 
                 if (count == 0) {
                     // ✔️ 존재하지 않을 때만 구매 처리
-                    stmt.executeUpdate("INSERT INTO Purchase (User_ID, Game_ID, PurchaseDate) VALUES (" + userId + ", " + gameId + ", '" + now + "')");
+                    stmt.executeUpdate("INSERT INTO Library (User_ID, Game_ID, PurchaseDate) VALUES (" + userId + ", " + gameId + ", '" + now + "')");
                 }
             }
 
