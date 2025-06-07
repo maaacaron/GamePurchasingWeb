@@ -31,12 +31,12 @@
 
                 // Library 테이블에 저장
                 stmt.executeUpdate("INSERT INTO Library (User_ID, Game_ID, PurchaseDate) VALUES (" + userId + ", " + gameId + ", '" + now + "')");
+
+                // 장바구니 비우기
+                stmt.executeUpdate("DELETE FROM CartItem WHERE Cart_ID = " + cartId);
             }
 
             itemsRs.close();
-
-            // 장바구니 비우기
-            stmt.executeUpdate("DELETE FROM CartItem WHERE Cart_ID = " + cartId);
 
             stmt.close();
             conn.close();
