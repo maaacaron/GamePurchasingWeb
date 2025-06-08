@@ -22,7 +22,7 @@
         <label class="form-label" for="post-title">제목:</label><br>
         <input type="text" name="title" class="title-input">
       </div>
-      <div class="filter-group">
+      <div class="community-filter-group">
           <label>게임 선택:
             <select name="gameId" required>
               <option value="">-- 선택 --</option>
