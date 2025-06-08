@@ -43,7 +43,7 @@
 %>
 
     <h2><%= title %></h2>
-    <p>작성자: <%= user_id %> | <%= ts %></p>
+    <p>작성자: <%= user_id %></p>
     <div class="post-content">
       <%= content.replaceAll("\n", "<br/>") %>
     </div>
