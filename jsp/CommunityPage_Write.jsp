@@ -4,13 +4,13 @@
 <%@ include file="log.jsp" %>
 <%
     writeLog("페이지 접근", request, session);
-%>
-
-<%
-    if (currentUser == null) {
+    String currentUser1 = (String) session.getAttribute("currentUser");
+    if (currentUser1 == null) {
         response.sendRedirect("LoginPage.jsp");
         return;
     }
+%>
+<%
     if ("POST".equalsIgnoreCase(request.getMethod())) {
         String title   = request.getParameter("title");
         String content = request.getParameter("content");
@@ -24,7 +24,7 @@
                        + "VALUES (?, ?, ?, ?)";
             ps = conn.prepareStatement(sql);
             ps.setString(1, title);
-            ps.setString(2, currentUser);
+            ps.setString(2, currentUser1);
             ps.setString(3, content);
             ps.setString(4, gameId);
             ps.executeUpdate();
