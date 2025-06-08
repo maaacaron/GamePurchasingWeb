@@ -25,7 +25,7 @@
         Class.forName(jdbc_driver);
         conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
         String sql = "SELECT p.title, p.user_id, p.content, u.Name "
-                   + "FROM posts p JOIN User u ON p.user_id = u.user_id "
+                   + "FROM posts p JOIN User u ON p.user_id = u.UserId "
                    + "WHERE p.id = ?";
         ps = conn.prepareStatement(sql);
         ps.setString(1, postId);
