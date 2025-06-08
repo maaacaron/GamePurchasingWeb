@@ -60,6 +60,25 @@
           String title = rs.getString("title");
           String user_id  = rs.getString("user_id");
           String gid   = rs.getString("game_id");
+
+          String userName = user_id; // 기본값(혹시 name 못 구할 때는 id 출력)
+          PreparedStatement psUser = null;
+          ResultSet rsUser = null;
+          try {
+            String sqlUser = "SELECT name FROM User WHERE user_id = ?";
+            psUser = conn.prepareStatement(sqlUser);
+            psUser.setString(1, user_id);
+            rsUser = psUser.executeQuery();
+            if (rsUser.next()) {
+                userName = rsUser.getString("name");
+            }
+          } catch(Exception e) {
+              // 필요시 로그
+          } finally {
+              if (rsUser != null) try { rsUser.close(); } catch(Exception e) {}
+              if (psUser != null) try { psUser.close(); } catch(Exception e) {}
+          }
+  
           if (filterGameId == null || filterGameId.isEmpty() || filterGameId.equals(gid)) {
             hasAny = true;
       %>
