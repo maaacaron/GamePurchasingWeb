@@ -4,13 +4,13 @@
 <%@ include file="log.jsp" %>
 <%
     writeLog("페이지 접근", request, session);
-    String currentUser = (String) session.getAttribute("currentUser");
+%>
+
+<%
     if (currentUser == null) {
         response.sendRedirect("LoginPage.jsp");
         return;
     }
-%>
-<%
     if ("POST".equalsIgnoreCase(request.getMethod())) {
         String title   = request.getParameter("title");
         String content = request.getParameter("content");
