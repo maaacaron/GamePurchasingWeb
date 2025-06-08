@@ -1,30 +1,63 @@
-<%@ page contentType="text/html; charset=UTF-8" session="true" %>
+<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8" %>
+<% request.setCharacterEncoding("UTF-8"); %>
+<%@ include file="SQLcontants.jsp" %>
+<%@ include file="log.jsp" %>
+<%
+    writeLog("CommunityPage_Detail 접속", request, session);
+%>
+<%
+    String postId = request.getParameter("postId");
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    try {
+        Class.forName(jdbc_driver);
+        conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
+        String sql = "SELECT p.title, p.author, p.timestamp, p.content "
+                   + "FROM posts p WHERE p.id = ?";
+        ps = conn.prepareStatement(sql);
+        ps.setString(1, postId);
+        rs = ps.executeQuery();
+        if (!rs.next()) {
+%>
+<!DOCTYPE html>
+<html><body>
+  <h2>게시글을 찾을 수 없습니다.</h2>
+</body></html>
+<%
+        } else {
+            String title = rs.getString("title");
+            String author = rs.getString("author");
+            Timestamp ts = rs.getTimestamp("timestamp");
+            String content = rs.getString("content");
+%>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/common.css">
+  <title>게시글 상세</title>
+</head>
+<body>
 <%@ include file="header.jsp" %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
-<script src="${pageContext.request.contextPath}/js/header-login-status.js"></script>
-<script src="${pageContext.request.contextPath}/js/game-data.js"></script>
-
-<main>
-  <h2 id="detail-title"></h2>
-  <p id="detail-meta"></p>
-  <p><strong>게임:</strong> <span id="detail-game"></span></p>
-  <div id="detail-content" class="post-content"></div>
-</main>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(location.search);
-    const postId = params.get('postId');
-    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
-    const post = posts.find(p => p.id === postId);
-    if (!post) {
-      document.getElementById('detail-title').textContent = '게시글을 찾을 수 없습니다.';
-      return;
+  <main>
+    <h2><%= title %></h2>
+    <p>작성자: <%= author %> | <%= ts %></p>
+    <div class="post-content">
+      <%= content.replaceAll("\n", "<br/>") %>
+    </div>
+    <p><button onclick="history.back()">목록으로 돌아가기</button></p>
+  </main>
+<%@ include file="footer.jsp" %>
+</body>
+</html>
+<%
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        try { if (rs != null) rs.close(); } catch (Exception e) {}
+        try { if (ps != null) ps.close(); } catch (Exception e) {}
+        try { if (conn != null) conn.close(); } catch (Exception e) {}
     }
-    document.getElementById('detail-title').textContent = post.title;
-    document.getElementById('detail-meta').textContent = `작성자: ${post.author} | ${new Date(post.timestamp).toLocaleString()}`;
-    const game = games.find(g => g.id === post.gameId);
-    document.getElementById('detail-game').textContent = game ? game.name : '알 수 없음';
-    document.getElementById('detail-content').textContent = post.content;
-  });
-</script>
+%>

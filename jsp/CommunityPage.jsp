@@ -1,57 +1,91 @@
-<%@ page contentType="text/html; charset=UTF-8" session="true" %>
+<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8" %>
+<% request.setCharacterEncoding("UTF-8"); %>
+<%@ include file="SQLcontants.jsp" %>
+<%@ include file="log.jsp" %>
+<%
+    writeLog("CommunityPage 접속", request, session);
+%>
+<%
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String filterGameId = request.getParameter("gameId");
+    try {
+        Class.forName(jdbc_driver);
+        conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
+
+        // 게임 목록 조회 (필터 select 옵션)
+        String sqlGames = "SELECT id, name FROM games";
+        PreparedStatement psGames = conn.prepareStatement(sqlGames);
+        ResultSet rsGames = psGames.executeQuery();
+%>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/common.css">
+  <title>커뮤니티</title>
+</head>
+<body>
 <%@ include file="header.jsp" %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
-<script src="${pageContext.request.contextPath}/js/header-login-status.js"></script>
-<script src="${pageContext.request.contextPath}/js/game-data.js"></script>
-
-<main>
-  <h2>커뮤니티</h2>
-  <div class="filter-group">
-    <label>게임 선택:
-      <select id="gameFilter"></select>
-    </label>
-    <button type="button" onclick="location.href='CommunityPage_Write.jsp'">글 쓰기</button>
-  </div>
-  <ul id="postList"></ul>
-</main>
-
-<script>
-  // 게임 필터 로드
-  function loadGameFilter() {
-    const sel = document.getElementById('gameFilter');
-    sel.innerHTML = '<option value="">전체 게임</option>';
-    games.forEach(g => {
-      const opt = document.createElement('option');
-      opt.value = g.id;
-      opt.textContent = g.name;
-      sel.appendChild(opt);
-    });
-    sel.onchange = loadPosts;
-  }
-
-  // 게시글 로드
-  function loadPosts() {
-    const all = JSON.parse(localStorage.getItem('posts') || '[]');
-    const filter = document.getElementById('gameFilter').value;
-    const list = document.getElementById('postList');
-    list.innerHTML = '';
-    const posts = filter ? all.filter(p => p.gameId === filter) : all;
-    if (!posts.length) {
-      list.innerHTML = '<li>등록된 게시글이 없습니다.</li>';
-      return;
+  <main>
+    <h2>커뮤니티</h2>
+    <div class="filter-group">
+      <label>게임 선택:
+        <select name="gameFilter" onchange="location.href='CommunityPage.jsp?gameId=' + this.value">
+          <option value="">-- 전체 --</option>
+          <% while (rsGames.next()) {
+               String gid = rsGames.getString("id");
+               String gname = rsGames.getString("name");
+               String sel = (filterGameId != null && filterGameId.equals(gid)) ? "selected" : "";
+          %>
+            <option value="<%=gid%>" <%=sel%>><%=gname%></option>
+          <% } 
+             rsGames.close();
+             psGames.close();
+          %>
+        </select>
+      </label>
+      <button type="button" onclick="location.href='CommunityPage_Write.jsp'">글 쓰기</button>
+    </div>
+    <ul id="postList">
+      <%
+        String sqlPosts = "SELECT p.id, p.title, p.author, p.timestamp, p.game_id "
+                        + "FROM posts p "
+                        + "ORDER BY p.timestamp DESC";
+        ps = conn.prepareStatement(sqlPosts);
+        rs = ps.executeQuery();
+        boolean hasAny = false;
+        while (rs.next()) {
+          String pid   = rs.getString("id");
+          String title = rs.getString("title");
+          String auth  = rs.getString("author");
+          Timestamp ts = rs.getTimestamp("timestamp");
+          String gid   = rs.getString("game_id");
+          if (filterGameId == null || filterGameId.isEmpty() || filterGameId.equals(gid)) {
+            hasAny = true;
+      %>
+        <li>
+          <a href="CommunityPage_Detail.jsp?postId=<%=pid%>">
+            [<%=ts%>] <%=title%> (<%=auth%>)
+          </a>
+        </li>
+      <%  }
+        }
+        if (!hasAny) { %>
+        <li>등록된 게시글이 없습니다.</li>
+      <% } %>
+    </ul>
+  </main>
+<%@ include file="footer.jsp" %>
+</body>
+</html>
+<%
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        try { if (rs != null) rs.close(); } catch (Exception e) {}
+        try { if (ps != null) ps.close(); } catch (Exception e) {}
+        try { if (conn != null) conn.close(); } catch (Exception e) {}
     }
-    posts.forEach(p => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <a href="CommunityPage_Detail.jsp?postId=${p.id}">
-          [${new Date(p.timestamp).toLocaleString()}] ${p.title} (${p.author})
-        </a>`;
-      list.appendChild(li);
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    loadGameFilter();
-    loadPosts();
-  });
-</script>
+%>

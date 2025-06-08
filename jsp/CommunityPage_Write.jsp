@@ -1,68 +1,95 @@
-<%@ page contentType="text/html; charset=UTF-8" session="true" %>
-<%@ include file="header.jsp" %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
-<script src="${pageContext.request.contextPath}/js/header-login-status.js"></script>
-<script src="${pageContext.request.contextPath}/js/game-data.js"></script>
-
+<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8" %>
+<% request.setCharacterEncoding("UTF-8"); %>
+<%@ include file="SQLcontants.jsp" %>
+<%@ include file="log.jsp" %>
 <%
-  String user = (String) session.getAttribute("currentUser");
-  if (user == null) {
-    response.sendRedirect("LoginPage.jsp");
-    return;
-  }
+    writeLog("CommunityPage_Write 접속", request, session);
+    String currentUser = (String) session.getAttribute("currentUser");
+    if (currentUser == null) {
+        response.sendRedirect("LoginPage.jsp");
+        return;
+    }
 %>
-
-<main>
-  <h2>커뮤니티 글 작성</h2>
-  <form onsubmit="event.preventDefault(); submitPost();">
-    <div class="filter-group">
-      <label>게임:
-        <select id="post-game"></select>
+<%
+    if ("POST".equalsIgnoreCase(request.getMethod())) {
+        String title   = request.getParameter("title");
+        String content = request.getParameter("content");
+        String gameId  = request.getParameter("gameId");
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            Class.forName(jdbc_driver);
+            conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
+            String sql = "INSERT INTO posts (title, author, content, game_id, timestamp) "
+                       + "VALUES (?, ?, ?, ?, NOW())";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, title);
+            ps.setString(2, currentUser);
+            ps.setString(3, content);
+            ps.setString(4, gameId);
+            ps.executeUpdate();
+            response.sendRedirect("CommunityPage.jsp");
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { if (ps   != null) ps.close();   } catch (Exception e) {}
+            try { if (conn != null) conn.close(); } catch (Exception e) {}
+        }
+    }
+%>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/common.css">
+  <title>글 쓰기</title>
+</head>
+<body>
+<%@ include file="header.jsp" %>
+  <main>
+    <h2>새 게시글 작성</h2>
+    <form method="post" action="CommunityPage_Write.jsp">
+      <label>제목:
+        <input type="text" name="title" required />
       </label>
-    </div>
-    <div class="form-group">
-      <label>제목:</label><br>
-      <input type="text" id="post-title" style="width:100%;">
-    </div>
-    <div class="form-group">
-      <label>내용:</label><br>
-      <textarea id="post-content" rows="8" style="width:100%;"></textarea>
-    </div>
-    <button type="button" onclick="submitPost()">등록</button>
-  </form>
-</main>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const sel = document.getElementById('post-game');
-    sel.innerHTML = '<option value="">-- 게임 선택 --</option>';
-    games.forEach(g => {
-      const opt = document.createElement('option');
-      opt.value = g.id;
-      opt.textContent = g.name;
-      sel.appendChild(opt);
-    });
-  });
-
-  function submitPost() {
-    const author = localStorage.getItem('currentUser');
-    if (!author) {
-      alert('로그인이 필요합니다.');
-      location.href = 'LoginPage.jsp';
-      return;
-    }
-    const gameId = document.getElementById('post-game').value;
-    const title = document.getElementById('post-title').value.trim();
-    const content = document.getElementById('post-content').value.trim();
-    if (!gameId || !title || !content) {
-      alert('모든 항목을 입력해주세요.');
-      return;
-    }
-    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
-    const id = Date.now().toString();
-    posts.push({ id, gameId, author, title, content, timestamp: Date.now() });
-    localStorage.setItem('posts', JSON.stringify(posts));
-    alert('게시글이 등록되었습니다.');
-    location.href = 'CommunityPage.jsp';
-  }
-</script>
+      <label>게임 선택:
+        <select name="gameId" required>
+          <option value="">-- 선택 --</option>
+          <%
+            Connection conn2 = null;
+            PreparedStatement ps2 = null;
+            ResultSet rs2 = null;
+            try {
+                Class.forName(jdbc_driver);
+                conn2 = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
+                String sql2 = "SELECT id, name FROM games";
+                ps2 = conn2.prepareStatement(sql2);
+                rs2 = ps2.executeQuery();
+                while (rs2.next()) {
+          %>
+                  <option value="<%= rs2.getString("id") %>">
+                    <%= rs2.getString("name") %>
+                  </option>
+          <%
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try { if (rs2   != null) rs2.close();   } catch (Exception e) {}
+                try { if (ps2   != null) ps2.close();   } catch (Exception e) {}
+                try { if (conn2 != null) conn2.close(); } catch (Exception e) {}
+            }
+          %>
+        </select>
+      </label>
+      <label>내용:
+        <textarea name="content" rows="10" required></textarea>
+      </label>
+      <button type="submit">등록하기</button>
+      <button type="button" onclick="history.back()">취소</button>
+    </form>
+  </main>
+<%@ include file="footer.jsp" %>
+</body>
+</html>
