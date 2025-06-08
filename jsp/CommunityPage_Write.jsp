@@ -86,7 +86,7 @@
       <label>내용:
         <textarea name="content" rows="10" required></textarea>
       </label>
-      <button type="submit" onclick="location.href='CommunityPage.jsp'">등록하기</button>
+      <button type="submit" onclick="location.href='CommunityPage.jsp'"> 등록하기</button>
       <button type="button" onclick="history.back()">취소</button>
     </form>
   </main>
