@@ -40,17 +40,19 @@
                     Class.forName(jdbc_driver);
                     conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
 
-                    ResultSet userRs = stmt.executeQuery("SELECT ID FROM User WHERE UserID = '" + userId + "'");
+                    PreparedStatement userStmt = conn.prepareStatement("SELECT ID FROM User WHERE UserID = ?");
+                    userStmt.setString(1, userId);
+                    ResultSet userRs = userStmt.executeQuery();
                     if (userRs.next()) {
                         int userDbId = userRs.getInt("ID");
-                        
+
                         String sql = "INSERT INTO posts (title, user_id, content, game_id) "
                                    + "VALUES (?, ?, ?, ?)";
                         ps = conn.prepareStatement(sql);
                         ps.setString(1, title);
-                        ps.setString(2, userDbId);
+                        ps.setInt(2, userDbId);
                         ps.setString(3, content);
-                        ps.setString(4, gameId);
+                        ps.setInt(4, Integer.parseInt(gameId));
                         ps.executeUpdate();
                         response.sendRedirect("CommunityPage.jsp");
                     }
