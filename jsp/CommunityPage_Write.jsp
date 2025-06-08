@@ -4,13 +4,14 @@
 <%@ include file="log.jsp" %>
 <%
     writeLog("페이지 접근", request, session);
+%>
+
+<%
     String currentUser1 = (String) session.getAttribute("currentUser");
     if (currentUser1 == null) {
         response.sendRedirect("LoginPage.jsp");
         return;
     }
-%>
-<%
     if ("POST".equalsIgnoreCase(request.getMethod())) {
         String title   = request.getParameter("title");
         String content = request.getParameter("content");
@@ -20,15 +21,21 @@
         try {
             Class.forName(jdbc_driver);
             conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-            String sql = "INSERT INTO posts (title, user_id, content, game_id) "
-                       + "VALUES (?, ?, ?, ?)";
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, title);
-            ps.setString(2, currentUser1);
-            ps.setString(3, content);
-            ps.setString(4, gameId);
-            ps.executeUpdate();
-            response.sendRedirect("CommunityPage.jsp");
+            String sqlUser = "SELECT ID FROM User WHERE UserID = ?";
+            PreparedStatement psUser = conn.prepareStatement(sqlUser);
+            psUser.setString(1, currentUser1);
+            ResultSet rsUser = psUser.executeQuery();
+            if (rsUser.next()) {
+                int userDBid = rsUser.getInt("ID");
+                String sql = "INSERT INTO posts (title, user_id, content, game_id) "
+                           + "VALUES (?, ?, ?, ?)";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, title);
+                ps.setString(2, currentUser1);
+                ps.setString(3, content);
+                ps.setString(4, gameId);
+                ps.executeUpdate();
+                response.sendRedirect("CommunityPage.jsp");
             return;
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,7 +70,7 @@
             try {
                 Class.forName(jdbc_driver);
                 conn2 = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-                String sql2 = "SELECT ID, Name FROM games";
+                String sql2 = "SELECT ID, Name FROM Game";
                 ps2 = conn2.prepareStatement(sql2);
                 rs2 = ps2.executeQuery();
                 while (rs2.next()) {
@@ -86,7 +93,7 @@
       <label>내용:
         <textarea name="content" rows="10" required></textarea>
       </label>
-      <button type="submit" onclick="location.href='CommunityPage.jsp'"> 등록하기</button>
+      <button type="submit"> 등록하기</button>
       <button type="button" onclick="history.back()">취소</button>
     </form>
   </main>
