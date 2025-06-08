@@ -65,7 +65,7 @@
           PreparedStatement psUser = null;
           ResultSet rsUser = null;
           try {
-            String sqlUser = "SELECT Name FROM User WHERE userId = ?";
+            String sqlUser = "SELECT Name FROM User WHERE UserID = ?";
             psUser = conn.prepareStatement(sqlUser);
             psUser.setString(1, user_id);
             rsUser = psUser.executeQuery();
