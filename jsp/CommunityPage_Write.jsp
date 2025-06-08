@@ -20,7 +20,7 @@
     <form method="post" action="CommunityPage_Write.jsp">
       <div class="form-group">
         <label class="form-label" for="post-title">제목:</label><br>
-        <input type="text" id="title" class="title-input">
+        <input type="text" name="title" class="title-input">
       </div>
       <div class="filter-group">
           <label>게임 선택:
@@ -95,7 +95,7 @@
         </div>
       <div class="form-group">
         <label class="form-label" for="post-content">내용:</label><br>
-        <textarea id="content" class="content-textarea"></textarea>
+        <textarea name="content" class="content-textarea"></textarea>
       </div>
       <button type="submit"> 등록하기</button>
       <button type="button" onclick="history.back()">취소</button>
