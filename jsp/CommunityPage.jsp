@@ -78,13 +78,13 @@
               if (rsUser != null) try { rsUser.close(); } catch(Exception e) {}
               if (psUser != null) try { psUser.close(); } catch(Exception e) {}
           }
-  
+
           if (filterGameId == null || filterGameId.isEmpty() || filterGameId.equals(gid)) {
             hasAny = true;
       %>
         <li>
           <a href="CommunityPage_Detail.jsp?postId=<%=pid%>">
-            <%=title%> (<%=user_id%>)
+            <%=title%> (<%=userName%>)
           </a>
         </li>
       <%  }
