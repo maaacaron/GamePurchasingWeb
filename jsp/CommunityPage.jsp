@@ -50,23 +50,22 @@
     </div>
     <ul id="postList">
       <%
-        String sqlPosts = "SELECT p.id, p.title, p.user_id, p.game_id, u.Name " +
-                          "FROM posts p " +
-                          "JOIN User u ON p.user_id = u.user_id";
+        String sqlPosts = "SELECT p.id, p.title, p.user_id, p.game_id "
+                        + "FROM posts p ";
         ps = conn.prepareStatement(sqlPosts);
         rs = ps.executeQuery();
         boolean hasAny = false;
         while (rs.next()) {
           String pid   = rs.getString("id");
           String title = rs.getString("title");
-          String name  = rs.getString("name");
+          String user_id  = rs.getString("user_id");
           String gid   = rs.getString("game_id");
           if (filterGameId == null || filterGameId.isEmpty() || filterGameId.equals(gid)) {
             hasAny = true;
       %>
         <li>
           <a href="CommunityPage_Detail.jsp?postId=<%=pid%>">
-            <%=title%> (<%=name%>)
+            <%=title%> (<%=user_id%>)
           </a>
         </li>
       <%  }
