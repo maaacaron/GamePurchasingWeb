@@ -351,14 +351,14 @@ main {
 }
 
 /* ─── Community List Styling ───────────────────────────────────────── */
-.filter-group {
+.community-filter-group {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.filter-group button {
+.community-filter-group button {
   background-color: #ff6b00;
   color: #fff;
   border: none;
@@ -368,7 +368,7 @@ main {
   transition: background 0.2s;
 }
 
-.filter-group button:hover {
+.community-filter-group button:hover {
   background-color: #e85e00;
 }
 
