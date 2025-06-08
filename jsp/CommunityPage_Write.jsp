@@ -3,8 +3,8 @@
 <%@ include file="SQLcontants.jsp" %>
 <%@ include file="log.jsp" %>
 <%
-    writeLog("CommunityPage_Write 접속", request, session);
-    String currentUser = (String) session.getAttribute("currentUser");
+    writeLog("페이지 접근", request, session);
+    String currentUser = session.getAttribute("currentUser");
     if (currentUser == null) {
         response.sendRedirect("LoginPage.jsp");
         return;

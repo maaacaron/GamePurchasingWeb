@@ -3,21 +3,7 @@
 <%@ include file="SQLcontants.jsp" %>
 <%@ include file="log.jsp" %>
 <%
-    writeLog("CommunityPage 접속", request, session);
-%>
-<%
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    String filterGameId = request.getParameter("gameId");
-    try {
-        Class.forName(jdbc_driver);
-        conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-
-        // 게임 목록 조회 (필터 select 옵션)
-        String sqlGames = "SELECT ID, Name FROM Game";
-        PreparedStatement psGames = conn.prepareStatement(sqlGames);
-        ResultSet rsGames = psGames.executeQuery();
+    writeLog("페이지 접근", request, session);
 %>
 <!DOCTYPE html>
 <html>
@@ -34,10 +20,23 @@
       <label>게임 선택:
         <select name="gameFilter" onchange="location.href='CommunityPage.jsp?GameId=' + this.value">
           <option value="">-- 전체 --</option>
-          <% while (rsGames.next()) {
-               String gid = rsGames.getString("ID");
-               String gname = rsGames.getString("Name");
-               String sel = (filterGameId != null && filterGameId.equals(gid)) ? "selected" : "";
+<%
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String filterGameId = request.getParameter("gameId");
+    try {
+        Class.forName(jdbc_driver);
+        conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
+
+        // 게임 목록 조회 (필터 select 옵션)
+        String sqlGames = "SELECT ID, Name FROM Game";
+        PreparedStatement psGames = conn.prepareStatement(sqlGames);
+        ResultSet rsGames = psGames.executeQuery();
+        while (rsGames.next()) {
+          String gid = rsGames.getString("ID");
+          String gname = rsGames.getString("Name");
+          String sel = (filterGameId != null && filterGameId.equals(gid)) ? "selected" : "";
           %>
             <option value="<%=gid%>" <%=sel%>><%=gname%></option>
           <% } 

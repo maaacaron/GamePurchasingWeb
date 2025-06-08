@@ -3,7 +3,7 @@
 <%@ include file="SQLcontants.jsp" %>
 <%@ include file="log.jsp" %>
 <%
-    writeLog("CommunityPage_Detail 접속", request, session);
+    writeLog("페이지 접근", request, session);
 %>
 
 <%
