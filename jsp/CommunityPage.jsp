@@ -65,12 +65,12 @@
           PreparedStatement psUser = null;
           ResultSet rsUser = null;
           try {
-            String sqlUser = "SELECT name FROM User WHERE user_id = ?";
+            String sqlUser = "SELECT Name FROM User WHERE userId = ?";
             psUser = conn.prepareStatement(sqlUser);
             psUser.setString(1, user_id);
             rsUser = psUser.executeQuery();
             if (rsUser.next()) {
-                userName = rsUser.getString("name");
+                userName = rsUser.getString("Name");
             }
           } catch(Exception e) {
               // 필요시 로그
