@@ -20,8 +20,8 @@
         try {
             Class.forName(jdbc_driver);
             conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-            String sql = "INSERT INTO posts (title, author, content, game_id, timestamp) "
-                       + "VALUES (?, ?, ?, ?, NOW())";
+            String sql = "INSERT INTO posts (title, user_id, content, game_id) "
+                       + "VALUES (?, ?, ?, ?)";
             ps = conn.prepareStatement(sql);
             ps.setString(1, title);
             ps.setString(2, currentUser);
@@ -63,13 +63,13 @@
             try {
                 Class.forName(jdbc_driver);
                 conn2 = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-                String sql2 = "SELECT id, name FROM games";
+                String sql2 = "SELECT ID, Name FROM games";
                 ps2 = conn2.prepareStatement(sql2);
                 rs2 = ps2.executeQuery();
                 while (rs2.next()) {
           %>
-                  <option value="<%= rs2.getString("id") %>">
-                    <%= rs2.getString("name") %>
+                  <option value="<%= rs2.getString("ID") %>">
+                    <%= rs2.getString("Name") %>
                   </option>
           <%
                 }
@@ -90,6 +90,5 @@
       <button type="button" onclick="history.back()">취소</button>
     </form>
   </main>
-<%@ include file="footer.jsp" %>
 </body>
 </html>

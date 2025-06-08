@@ -5,6 +5,7 @@
 <%
     writeLog("CommunityPage_Detail 접속", request, session);
 %>
+
 <%
     String postId = request.getParameter("postId");
     Connection conn = null;
@@ -13,7 +14,7 @@
     try {
         Class.forName(jdbc_driver);
         conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-        String sql = "SELECT p.title, p.author, p.timestamp, p.content "
+        String sql = "SELECT p.title, p.user_id, p.content "
                    + "FROM posts p WHERE p.id = ?";
         ps = conn.prepareStatement(sql);
         ps.setString(1, postId);
@@ -27,8 +28,7 @@
 <%
         } else {
             String title = rs.getString("title");
-            String author = rs.getString("author");
-            Timestamp ts = rs.getTimestamp("timestamp");
+            String user_id = rs.getString("user_id");
             String content = rs.getString("content");
 %>
 <!DOCTYPE html>
@@ -42,13 +42,12 @@
 <%@ include file="header.jsp" %>
   <main>
     <h2><%= title %></h2>
-    <p>작성자: <%= author %> | <%= ts %></p>
+    <p>작성자: <%= user_id %> | <%= ts %></p>
     <div class="post-content">
       <%= content.replaceAll("\n", "<br/>") %>
     </div>
     <p><button onclick="history.back()">목록으로 돌아가기</button></p>
   </main>
-<%@ include file="footer.jsp" %>
 </body>
 </html>
 <%

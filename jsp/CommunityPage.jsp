@@ -15,7 +15,7 @@
         conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
 
         // 게임 목록 조회 (필터 select 옵션)
-        String sqlGames = "SELECT id, name FROM games";
+        String sqlGames = "SELECT ID, Name FROM Game";
         PreparedStatement psGames = conn.prepareStatement(sqlGames);
         ResultSet rsGames = psGames.executeQuery();
 %>
@@ -32,11 +32,11 @@
     <h2>커뮤니티</h2>
     <div class="filter-group">
       <label>게임 선택:
-        <select name="gameFilter" onchange="location.href='CommunityPage.jsp?gameId=' + this.value">
+        <select name="gameFilter" onchange="location.href='CommunityPage.jsp?GameId=' + this.value">
           <option value="">-- 전체 --</option>
           <% while (rsGames.next()) {
-               String gid = rsGames.getString("id");
-               String gname = rsGames.getString("name");
+               String gid = rsGames.getString("ID");
+               String gname = rsGames.getString("Name");
                String sel = (filterGameId != null && filterGameId.equals(gid)) ? "selected" : "";
           %>
             <option value="<%=gid%>" <%=sel%>><%=gname%></option>
@@ -50,24 +50,22 @@
     </div>
     <ul id="postList">
       <%
-        String sqlPosts = "SELECT p.id, p.title, p.author, p.timestamp, p.game_id "
-                        + "FROM posts p "
-                        + "ORDER BY p.timestamp DESC";
+        String sqlPosts = "SELECT p.id, p.title, p.user_id, p.game_id "
+                        + "FROM posts p ";
         ps = conn.prepareStatement(sqlPosts);
         rs = ps.executeQuery();
         boolean hasAny = false;
         while (rs.next()) {
           String pid   = rs.getString("id");
           String title = rs.getString("title");
-          String auth  = rs.getString("author");
-          Timestamp ts = rs.getTimestamp("timestamp");
+          String user_id  = rs.getString("user_id");
           String gid   = rs.getString("game_id");
           if (filterGameId == null || filterGameId.isEmpty() || filterGameId.equals(gid)) {
             hasAny = true;
       %>
         <li>
           <a href="CommunityPage_Detail.jsp?postId=<%=pid%>">
-            [<%=ts%>] <%=title%> (<%=auth%>)
+            <%=title%> (<%=user_id%>)
           </a>
         </li>
       <%  }
@@ -77,7 +75,6 @@
       <% } %>
     </ul>
   </main>
-<%@ include file="footer.jsp" %>
 </body>
 </html>
 <%
