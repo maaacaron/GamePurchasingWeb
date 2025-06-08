@@ -36,6 +36,7 @@
                 ps.setString(4, gameId);
                 ps.executeUpdate();
                 response.sendRedirect("CommunityPage.jsp");
+            }
             return;
         } catch (Exception e) {
             e.printStackTrace();
