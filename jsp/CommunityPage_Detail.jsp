@@ -5,6 +5,16 @@
 <%
     writeLog("페이지 접근", request, session);
 %>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/common.css">
+  <title>게시글 상세</title>
+</head>
+<body>
+<%@ include file="header.jsp" %>
+  <main>
 
 <%
     String postId = request.getParameter("postId");
@@ -31,16 +41,7 @@
             String user_id = rs.getString("user_id");
             String content = rs.getString("content");
 %>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="../css/common.css">
-  <title>게시글 상세</title>
-</head>
-<body>
-<%@ include file="header.jsp" %>
-  <main>
+
     <h2><%= title %></h2>
     <p>작성자: <%= user_id %> | <%= ts %></p>
     <div class="post-content">

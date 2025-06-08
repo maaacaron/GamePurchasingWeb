@@ -6,46 +6,6 @@
     writeLog("페이지 접근", request, session);
 %>
 
-<%
-    String currentUser1 = (String) session.getAttribute("currentUser");
-    if (currentUser1 == null) {
-        response.sendRedirect("LoginPage.jsp");
-        return;
-    }
-    if ("POST".equalsIgnoreCase(request.getMethod())) {
-        String title   = request.getParameter("title");
-        String content = request.getParameter("content");
-        String gameId  = request.getParameter("gameId");
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            Class.forName(jdbc_driver);
-            conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-            String sqlUser = "SELECT ID FROM User WHERE UserID = ?";
-            PreparedStatement psUser = conn.prepareStatement(sqlUser);
-            psUser.setString(1, currentUser1);
-            ResultSet rsUser = psUser.executeQuery();
-            if (rsUser.next()) {
-                int userDBid = rsUser.getInt("ID");
-                String sql = "INSERT INTO posts (title, user_id, content, game_id) "
-                           + "VALUES (?, ?, ?, ?)";
-                ps = conn.prepareStatement(sql);
-                ps.setString(1, title);
-                ps.setString(2, currentUser1);
-                ps.setString(3, content);
-                ps.setString(4, gameId);
-                ps.executeUpdate();
-                response.sendRedirect("CommunityPage.jsp");
-            }
-            return;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (ps   != null) ps.close();   } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
-        }
-    }
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,6 +25,43 @@
         <select name="gameId" required>
           <option value="">-- 선택 --</option>
           <%
+            String userId = (String) session.getAttribute("currentUser");
+            if (userId == null) {
+                response.sendRedirect("LoginPage.jsp");
+                return;
+            }
+            if ("POST".equalsIgnoreCase(request.getMethod())) {
+                String title   = request.getParameter("title");
+                String content = request.getParameter("content");
+                String gameId  = request.getParameter("gameId");
+                Connection conn = null;
+                PreparedStatement ps = null;
+                try {
+                    Class.forName(jdbc_driver);
+                    conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
+
+                    ResultSet userRs = stmt.executeQuery("SELECT ID FROM User WHERE UserID = '" + userId + "'");
+                    if (userRs.next()) {
+                        int userDbId = userRs.getInt("ID");
+                        
+                        String sql = "INSERT INTO posts (title, user_id, content, game_id) "
+                                   + "VALUES (?, ?, ?, ?)";
+                        ps = conn.prepareStatement(sql);
+                        ps.setString(1, title);
+                        ps.setString(2, userDbId);
+                        ps.setString(3, content);
+                        ps.setString(4, gameId);
+                        ps.executeUpdate();
+                        response.sendRedirect("CommunityPage.jsp");
+                    }
+                    return;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try { if (ps   != null) ps.close();   } catch (Exception e) {}
+                    try { if (conn != null) conn.close(); } catch (Exception e) {}
+                }
+            }
             Connection conn2 = null;
             PreparedStatement ps2 = null;
             ResultSet rs2 = null;
