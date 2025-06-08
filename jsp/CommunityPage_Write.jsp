@@ -17,10 +17,10 @@
 <%@ include file="header.jsp" %>
   <main>
     <h2>새 게시글 작성</h2>
-    <form method="postForm" action="CommunityPage_Write.jsp">
+    <form method="post" action="CommunityPage_Write.jsp">
       <div class="form-group">
         <label class="form-label" for="post-title">제목:</label><br>
-        <input type="text" id="post-title" class="title-input">
+        <input type="text" id="title" class="title-input">
       </div>
       <div class="filter-group">
           <label>게임 선택:
@@ -95,7 +95,7 @@
         </div>
       <div class="form-group">
         <label class="form-label" for="post-content">내용:</label><br>
-        <textarea id="post-content" class="content-textarea"></textarea>
+        <textarea id="content" class="content-textarea"></textarea>
       </div>
       <button type="submit"> 등록하기</button>
       <button type="button" onclick="history.back()">취소</button>
