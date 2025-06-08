@@ -4,7 +4,7 @@
 <%@ include file="log.jsp" %>
 <%
     writeLog("페이지 접근", request, session);
-    String currentUser = session.getAttribute("currentUser");
+    String currentUser = (String) session.getAttribute("currentUser");
     if (currentUser == null) {
         response.sendRedirect("LoginPage.jsp");
         return;

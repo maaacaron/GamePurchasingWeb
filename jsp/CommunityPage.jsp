@@ -24,7 +24,7 @@
     Connection conn = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
-    String filterGameId = request.getParameter("gameId");
+    String filterGameId = request.getParameter("GameId");
     try {
         Class.forName(jdbc_driver);
         conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
