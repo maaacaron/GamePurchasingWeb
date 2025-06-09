@@ -2,7 +2,7 @@
 <%!
     public void writeLog(String message, HttpServletRequest request, HttpSession session) {
         try {
-            final String logFileName = "/usr/local/tomcat/webapps/ROOT/Web-DB/GamePurchasingWeb/jsp/log.txt";
+            final String logFileName = "/usr/local/tomcat/webapps/ROOT/GamePurchasingWeb/jsp/log.txt";
             BufferedWriter writer = new BufferedWriter(new FileWriter(logFileName, true));
 
             writer.append("\nTime:\t" + LocalDate.now() + " " + LocalTime.now()
