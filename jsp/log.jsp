@@ -2,8 +2,9 @@
 <% request.setCharacterEncoding("UTF-8");%>
 <%!
     public void writeLog(String message, HttpServletRequest request, HttpSession session) {
-        try {
-            final String logFileName = application.getRealPath(request.getServletPath().replaceAll("[^/]+$", "log.txt"));
+        try { 
+            ServletContext application = request.getServletContext();
+            String logFileName = application.getRealPath(request.getServletPath().replaceAll("[^/]+$", "log.txt"));
             BufferedWriter writer = new BufferedWriter(new FileWriter(logFileName, true));
 
             writer.append("\nTime:\t" + LocalDate.now() + " " + LocalTime.now()
