@@ -11,7 +11,7 @@
 
   <nav class="main-nav">
     <a href="CategoryPage.jsp">카테고리</a>
-    <a href="DiscountPage.jsp">할인</a>
+    <a href="GameListPage.jsp?discount=true">할인</a>
     <a href="CommunityPage.jsp">커뮤니티</a>
     <a href="SupportPage.jsp">지원</a>
   </nav>
