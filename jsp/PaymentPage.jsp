@@ -20,26 +20,44 @@
                 cartId = cartRs.getInt("ID");
             }
             cartRs.close();
+            stmt.close();
 
-            ResultSet itemsRs = stmt.executeQuery("SELECT Game_ID FROM CartItem WHERE Cart_ID = " + cartId);
-            LocalDate now = java.time.LocalDate.now();
+            PreparedStatement psItems = conn.prepareStatement("SELECT Game_ID FROM CartItem WHERE Cart_ID = ?");
+            psItems.setInt(1, cartId);
+            ResultSet itemsRs = psItems.executeQuery();
 
             while (itemsRs.next()) {
                 int gameId = itemsRs.getInt("Game_ID");
 
-                // 🔍 라이브러리 중복 여부 확인
-                ResultSet checkRs = stmt.executeQuery(
-                    "SELECT COUNT(*) FROM Library WHERE User_ID = " + userId + " AND Game_ID = " + gameId
+                // 라이브러리 중복 여부 확인
+                PreparedStatement psCheck = conn.prepareStatement(
+                    "SELECT COUNT(*) FROM Library WHERE User_ID = ? AND Game_ID = ?"
                 );
+                psCheck.setInt(1, userId);
+                psCheck.setInt(2, gameId);
+                ResultSet checkRs = psCheck.executeQuery();
                 checkRs.next();
                 int count = checkRs.getInt(1);
 
                 if (count == 0) {
-                  // ✔️ 존재하지 않을 때만 구매 처리
-                  stmt.executeUpdate("INSERT INTO Library (User_ID, Game_ID, PurchaseDate) VALUES (" + userId + ", " + gameId + ", '" + now + "')");
+                    // 존재하지 않을 때만 구매 처리
+                    PreparedStatement psInsert = conn.prepareStatement(
+                        "INSERT INTO Library (User_ID, Game_ID, PurchaseDate) VALUES (?, ?, ?)"
+                    );
+                    psInsert.setInt(1, userId);
+                    psInsert.setInt(2, gameId);
+                    psInsert.setString(3, now.toString());
+                    psInsert.executeUpdate();
+                    psInsert.close();
 
-                  // 결제 후 장바구니 비우기
-                  stmt.executeUpdate("DELETE FROM CartItem WHERE Cart_ID = " + cartId + " AND Game_ID = " + gameId);
+                    // 결제 후 장바구니 비우기
+                    PreparedStatement psDelete = conn.prepareStatement(
+                        "DELETE FROM CartItem WHERE Cart_ID = ? AND Game_ID = ?"
+                    );
+                    psDelete.setInt(1, cartId);
+                    psDelete.setInt(2, gameId);
+                    psDelete.executeUpdate();
+                    psDelete.close();
                 }
                 else
                 {
@@ -50,11 +68,11 @@
                 <%
                 }
                 checkRs.close();
+                psCheck.close();
             }
 
             itemsRs.close();
-
-            stmt.close();
+            psItems.close();
             conn.close();
 
             // 결제 완료 메시지
