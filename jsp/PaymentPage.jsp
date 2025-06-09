@@ -76,14 +76,7 @@
             itemsRs.close();
             psItems.close();
             conn.close();
-
-            // 결제 완료 메시지
-%>
-            <script>
-                alert("결제가 완료되었습니다!");
-                location.href = "LibraryPage.jsp";
-            </script>
-<%
+            
         } catch (Exception e) {
             out.println("<p style='color:red;'>결제 오류: " + e.getMessage() + "</p>");
         }
