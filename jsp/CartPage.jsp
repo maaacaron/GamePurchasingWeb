@@ -62,20 +62,31 @@
               total += price;
         %>
           <li>
-            <input type="checkbox" name="remove" value="<%= gameId %>">
+            <input type="checkbox" name="remove" value="<%= gameId %>" data-price="<%= price %>" onclick="updateTotal()">
             <%= name %> - <%= price %>원
           </li>
         <%
           }
         %>
         </ul>
-        <p><strong>총 금액: <%= total %>원</strong></p>
+        <p><strong>총 금액: <span id="total">0</span>원</strong></p>
         <div class="action-buttons">
           <button type="submit">선택 항목 삭제</button>
           <button formaction="PaymentPage.jsp" formmethod="post">결제하기</button>
           <a href="LibraryPage.jsp"><button type="button">마이페이지</button></a>
         </div>
       </form>
+      <script>
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('input[type="checkbox"][name="remove"]:checked').forEach(function(chk) {
+                total += parseInt(chk.getAttribute('data-price'));
+            });
+            document.getElementById('total').innerText = total;
+        }
+        // 페이지 로드 시 총 금액 0으로 초기화
+        document.addEventListener('DOMContentLoaded', updateTotal);
+        </script>
   <%
                     rs.close();
                 }
