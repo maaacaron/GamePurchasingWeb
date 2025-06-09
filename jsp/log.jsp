@@ -28,7 +28,7 @@
             if (gameIds != null) {
                 for (String gameIdd : gameIds) {
                     // 각 게임ID 별로 로그 기록 또는 DB 처리 등 가능
-                    out.println("결제된 게임ID: " + gameIdd + "<br>");
+                    writer.append("\tGameID:\t" + gameIdd);
                 }
             }
 
