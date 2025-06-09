@@ -24,6 +24,14 @@
                 writer.append("\tGameID:\t" + gameId);
             }
 
+            String[] gameIds = request.getParameterValues("remove");
+            if (gameIds != null) {
+                for (String gameId : gameIds) {
+                    // 각 게임ID 별로 로그 기록 또는 DB 처리 등 가능
+                    out.println("결제된 게임ID: " + gameId + "<br>");
+                }
+            }
+
             String userId = request.getParameter("userId");             //유저 id(로그인)
             if (userId != null) {
                 writer.append("\tUserID:\t" + userId);
