@@ -21,10 +21,14 @@
             }
             cartRs.close();
             stmt.close();
+            
+            LocalDate now = java.time.LocalDate.now();
 
             PreparedStatement psItems = conn.prepareStatement("SELECT Game_ID FROM CartItem WHERE Cart_ID = ?");
             psItems.setInt(1, cartId);
             ResultSet itemsRs = psItems.executeQuery();
+
+            java.time.LocalDate now = java.time.LocalDate.now();
 
             while (itemsRs.next()) {
                 int gameId = itemsRs.getInt("Game_ID");
