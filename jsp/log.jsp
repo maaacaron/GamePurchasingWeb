@@ -1,4 +1,5 @@
-<%@ page language="java" import="java.io.*, java.time.*" contentType="text/html;charset=utf8" pageEncoding="utf8" %>
+<%@ page language="java" import="java.sql.*, javax.sql.DataSource" contentType="text/html;charset=utf8" pageEncoding="utf8"%>
+<% request.setCharacterEncoding("UTF-8");%>
 <%!
     public void writeLog(String message, HttpServletRequest request, HttpSession session) {
         try {
