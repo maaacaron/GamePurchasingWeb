@@ -8,28 +8,27 @@
 
 <%
     Integer userId = (Integer) session.getAttribute("userId");
-    if (userId != null) {
+    String[] gameIds = request.getParameterValues("remove");
+    if (userId != null && gameIds != null) {
         try {
             Class.forName(jdbc_driver);
             Connection conn = DriverManager.getConnection(mySQL_database, mySQL_id, mySQL_password);
-            Statement stmt = conn.createStatement();
 
-            ResultSet cartRs = stmt.executeQuery("SELECT ID FROM Cart WHERE User_ID = " + userId);
+            ResultSet cartRs = null;
             int cartId = -1;
+            PreparedStatement cartStmt = conn.prepareStatement("SELECT ID FROM Cart WHERE User_ID = ?");
+            cartStmt.setInt(1, userId);
+            cartRs = cartStmt.executeQuery();
             if (cartRs.next()) {
                 cartId = cartRs.getInt("ID");
             }
             cartRs.close();
-            stmt.close();
+            cartStmt.close();
 
             LocalDate now = java.time.LocalDate.now();
 
-            PreparedStatement psItems = conn.prepareStatement("SELECT Game_ID FROM CartItem WHERE Cart_ID = ?");
-            psItems.setInt(1, cartId);
-            ResultSet itemsRs = psItems.executeQuery();
-
-            while (itemsRs.next()) {
-                int gameId = itemsRs.getInt("Game_ID");
+            for (String gid : gameIds) {
+                int gameId = Integer.parseInt(gid);
 
                 // 라이브러리 중복 여부 확인
                 PreparedStatement psCheck = conn.prepareStatement(
@@ -72,11 +71,8 @@
                 checkRs.close();
                 psCheck.close();
             }
-
-            itemsRs.close();
-            psItems.close();
             conn.close();
-            
+
         } catch (Exception e) {
             out.println("<p style='color:red;'>결제 오류: " + e.getMessage() + "</p>");
         }
