@@ -23,10 +23,9 @@
     <a href="CartPage.jsp" class="cart-btn">장바구니</a>
 
     <% if (currentUser == null) { %>
-      <a href="LibraryPage.jsp" class="cart-btn" id="myPage-button">마이페이지</a>
       <a href="LoginPage.jsp" class="login-btn" id="login-button">로그인</a>
     <% } else { %>
-      <span><%= currentUser %>님</span>
+      <a href="LibraryPage.jsp" class="cart-btn" id="myPage-button">마이페이지</a>
       <a href="Logout.jsp" class="login-btn">로그아웃</a>
     <% } %>
   </div>
